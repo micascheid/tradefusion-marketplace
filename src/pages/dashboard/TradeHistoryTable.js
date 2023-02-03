@@ -11,33 +11,21 @@ import NumberFormat from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 
-function createData(trackingNo, name, fat, carbs, protein) {
-    return { trackingNo, name, fat, carbs, protein };
-}
-
-const tradeData = (botName, position, pnl) => {
-    return { botName, position, pnl }
+const tradeData = (time, botName, position, pnl) => {
+    return { time, botName, position, pnl }
 }
 
 const rows = [
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1),
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1),
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1)
+    tradeData(1,"CSP", "Short", 2),
+    tradeData(2,"CSP", "Short", .5),
+    tradeData(3,"CSP", "Long", 3),
+    tradeData(4,"CSP", "Short", -.5),
+    tradeData(5,"CSP", "Long", -3),
+    tradeData(6,"CSP", "Short", -2.1),
+    tradeData(7,"CSP", "Short", 2),
+    tradeData(8,"CSP", "Short", .5),
+    tradeData(9,"CSP", "Long", 3),
+    tradeData(10,"CSP", "Short", -.5),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -70,14 +58,20 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: 'botName',
+        id: 'time',
         align: 'left',
+        disablePadding: false,
+        label: 'Time'
+    },
+    {
+        id: 'botName',
+        align: 'center',
         disablePadding: false,
         label: 'Bot'
     },
     {
         id: 'position',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: 'Position'
     },
@@ -175,7 +169,7 @@ export default function TradeHistoryTable() {
                 <Table
                     aria-labelledby="tableTitle"
                     sx={{
-                        '& .MuiTableCell-root:first-child': {
+                        '& .MuiTableCell-root:first-of-type': {
                             pl: 2
                         },
                         '& .MuiTableCell-root:last-child': {
@@ -196,22 +190,17 @@ export default function TradeHistoryTable() {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
-                                    key={row.botName}
+                                    key={row.time}
                                     selected={isItemSelected}
                                 >
                                     <TableCell component="th" id={labelId} scope="row" align="left">
                                         <Link color="secondary" component={RouterLink} to="">
-                                            {row.botName}
+                                            {row.time}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="left">{row.position}</TableCell>
+                                    <TableCell align="center">{row.botName}</TableCell>
+                                    <TableCell align="center">{row.position}</TableCell>
                                     <TableCell align="right">{row.pnl}</TableCell>
-                                    {/*<TableCell align="left">*/}
-                                    {/*    <OrderStatus status={row.carbs} />*/}
-                                    {/*</TableCell>*/}
-                                    {/*<TableCell align="right">*/}
-                                    {/*    <NumberFormat value={row.protein} displayType="text" thousandSeparator prefix="$" />*/}
-                                    {/*</TableCell>*/}
                                 </TableRow>
                             );
                         })}

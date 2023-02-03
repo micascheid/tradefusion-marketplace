@@ -12,7 +12,7 @@ import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const TOTALBOTS = "Total Bots:";
-const QuantSelectee = ({ color, quantName, totalBots, percentage, isLoss, extra }) => (
+const QuantSelectee = ({ color, quantName, totalBots }) => (
     <MainCard contentSX={{ p: 2.25 }}>
         <Stack spacing={0.5}>
             <Typography variant="h6" color="textSecondary">
@@ -47,7 +47,7 @@ const QuantSelectee = ({ color, quantName, totalBots, percentage, isLoss, extra 
             <Typography variant="caption" color="textSecondary">
                 You made an extra{' '}
                 <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
-                    {extra}
+                    {35}
                 </Typography>{' '}
                 this year
             </Typography>

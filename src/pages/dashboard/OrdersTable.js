@@ -20,24 +20,24 @@ const tradeData = (botName, position, pnl) => {
 }
 
 const rows = [
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1),
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1),
-    tradeData("CSP", "Short", 2),
-    tradeData("CSP", "Short", .5),
-    tradeData("CSP", "Long", 3),
-    tradeData("CSP", "Short", -.5),
-    tradeData("CSP", "Long", -3),
-    tradeData("CSP", "Short", -2.1)
+    tradeData("CSP1", "Short", 2),
+    tradeData("CSP2", "Short", .5),
+    tradeData("CSP3", "Long", 3),
+    tradeData("CSP4", "Short", -.5),
+    tradeData("CSP5", "Long", -3),
+    tradeData("CSP6", "Short", -2.1),
+    tradeData("CSP7", "Short", 2),
+    tradeData("CSP8", "Short", .5),
+    tradeData("CSP9", "Long", 3),
+    tradeData("CSP10", "Short", -.5),
+    tradeData("CSP11", "Long", -3),
+    tradeData("CSP12", "Short", -2.1),
+    tradeData("CSP13", "Short", 2),
+    tradeData("CSP14", "Short", .5),
+    tradeData("CSP15", "Long", 3),
+    tradeData("CSP16", "Short", -.5),
+    tradeData("CSP17", "Long", -3),
+    tradeData("CSP18", "Short", -2.1)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -175,7 +175,7 @@ export default function OrderTable() {
                 <Table
                     aria-labelledby="tableTitle"
                     sx={{
-                        '& .MuiTableCell-root:first-child': {
+                        '& .MuiTableCell-root:first-of-type': {
                             pl: 2
                         },
                         '& .MuiTableCell-root:last-child': {

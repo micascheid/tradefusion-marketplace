@@ -1,20 +1,12 @@
-import {useState} from 'react';
+import { useState } from 'react';
+import { collection, doc, getDoc, getDocs, firestore } from 'firebase/firestore';
 
+import { db } from  '../../FirebaseConfig';
 // material-ui
 import {
-  Avatar,
-  AvatarGroup,
   Box,
-  Button,
   Grid,
-  List,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemSecondaryAction,
-  ListItemText,
-  MenuItem,
   Stack,
-  TextField,
   Typography
 } from '@mui/material';
 
@@ -28,13 +20,9 @@ import MainCard from 'components/MainCard';
 import QuantSelectee from 'components/cards/statistics/QuantSelectee';
 
 // assets
-import {GiftOutlined, MessageOutlined, SettingOutlined} from '@ant-design/icons';
-import avatar1 from 'assets/images/users/avatar-1.png';
-import avatar2 from 'assets/images/users/avatar-2.png';
-import avatar3 from 'assets/images/users/avatar-3.png';
-import avatar4 from 'assets/images/users/avatar-4.png';
-import Grid2 from "@mui/material/Unstable_Grid2";
+
 import TradeHistoryTable from "./TradeHistoryTable";
+import AvailableQuants from "./AvailableQuants";
 
 // avatar style
 const avatarSX = {
@@ -75,6 +63,31 @@ const DashboardDefault = () => {
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
 
+
+  // const fetchPost = async () =>
+  // {
+  //   const docRef = doc(db, "quant_names", "mica");
+  //
+  //   const querySnapshot = await getDoc(docRef);
+  //   console.log(querySnapshot.data());
+  //   // querySnapshot.forEach((doc) => {
+  //   //   // doc.data() is never undefined for query doc snapshots
+  //   //   console.log(doc.id, " => ", doc.data());
+  //   // });
+  // }
+  // fetchPost().then();
+
+  const fetchQuants = async () => {
+    const querySnapshot = await getDocs(collection(db, "quant_names"));
+    // querySnapshot.forEach((doc) =>{
+    //   console.log(doc.id, '=>', doc.data());
+    // });
+    console.log()
+    return querySnapshot;
+  }
+
+
+
   return (
     <Grid container spacing={2}>
       {/* Static left side column containing populated list of bots from a qaunt */}
@@ -93,20 +106,21 @@ const DashboardDefault = () => {
 
       {/* Populates the first rows of cards conaining Qaunts available */}
       <Grid item xs={8}>
-        <Grid container justifyContent="space-between" spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="h5">Available Qaunts</Typography>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <QuantSelectee extra="35,000"/>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <QuantSelectee extra="35,000"/>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <QuantSelectee extra="35,000"/>
-          </Grid>
-        </Grid>
+        {/*<Grid container justifyContent="space-between" spacing={2}>*/}
+        {/*  <Grid item xs={12}>*/}
+        {/*    <Typography variant="h5">Available Qaunts</Typography>*/}
+        {/*  </Grid>*/}
+        {/*  <Grid item xs={12} lg={4}>*/}
+        {/*    <QuantSelectee totalBots="35,000"/>*/}
+        {/*  </Grid>*/}
+        {/*  <Grid item xs={12} lg={4}>*/}
+        {/*    <QuantSelectee extra="35,000"/>*/}
+        {/*  </Grid>*/}
+        {/*  <Grid item xs={12} lg={4}>*/}
+        {/*    <QuantSelectee extra="35,000"/>*/}
+        {/*  </Grid>*/}
+        {/*</Grid>*/}
+        <AvailableQuants quants={fetchQuants()}/>
         <Box sx={{pt:4}}/>
         <Grid container spacing={2}>
           <Grid item xs={12}>
