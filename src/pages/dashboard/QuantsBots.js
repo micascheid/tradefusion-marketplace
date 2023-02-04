@@ -1,19 +1,34 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-
+import {
+    Box,
+    Button,
+    Collapse,
+    IconButton,
+    Link,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
+import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 // third-party
 import NumberFormat from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
+import {blueGrey} from "@mui/material/colors";
 
 
-const botsData = (botName, strat_type, timeframes) => {
-    return { botName, strat_type, timeframes }
+const botsData = (botName, strat_type, timeframes, trading_pairs, about_bot) => {
+    return { botName, strat_type, timeframes, trading_pairs, about_bot }
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -46,6 +61,12 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
+        id: 'collapsable',
+        align: 'left',
+        disablePadding: false,
+        label: 'collapsable'
+    },
+    {
         id: 'botName',
         align: 'left',
         disablePadding: false,
@@ -67,7 +88,7 @@ const headCells = [
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function OrderTableHead({ order, orderBy }) {
+function QuantsBotsTableHead({ order, orderBy }) {
     return (
         <TableHead>
             <TableRow>
@@ -86,7 +107,7 @@ function OrderTableHead({ order, orderBy }) {
     );
 }
 
-OrderTableHead.propTypes = {
+QuantsBotsTableHead.propTypes = {
     order: PropTypes.string,
     orderBy: PropTypes.string
 };
@@ -133,14 +154,13 @@ export default function QuantsBots(props) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
+    const [open, setOpen] = useState(-1);
 
     const rows = Object.keys(props.quant.bots).map((name) => {
-        return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes.toString())
+        return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes, props.quant.bots[name].trading_pairs, props.quant.bots[name].about_bot)
     })
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-
 
     return (
         <Box>
@@ -154,7 +174,7 @@ export default function QuantsBots(props) {
                     '& td, & th': { whiteSpace: 'nowrap' }
                 }}
             >
-                <Table
+                <Table aria-label="collapsible table"
                     aria-labelledby="tableTitle"
                     sx={{
                         '& .MuiTableCell-root:first-of-type': {
@@ -165,31 +185,77 @@ export default function QuantsBots(props) {
                         }
                     }}
                 >
-                    <OrderTableHead order={order} orderBy={orderBy} />
+                    <QuantsBotsTableHead order={order} orderBy={orderBy} />
                     <TableBody>
                         {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
-
+                            console.log(row.about_bot);
                             return (
-                                <TableRow
+                              <Fragment>
+                                  <TableRow
                                     hover
                                     role="checkbox"
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     key={row.botName}
                                     selected={isItemSelected}
-                                >
-                                    <TableCell component="th" id={labelId} scope="row" align="left">
-                                        <Link color="secondary" component={RouterLink} to="">
-                                            {row.botName}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell align="left">{row.strat_type}</TableCell>
-                                    <TableCell align="right">{row.timeframes}</TableCell>
+                                  >
+                                      <TableCell>
+                                          <IconButton onClick={() => setOpen((open === index ? -1 : index))}>
+                                              {open === index ? (
+                                                <KeyboardArrowUp/>
+                                              ) : (
+                                                <KeyboardArrowDown/>
+                                              )}
+                                          </IconButton>
+                                      </TableCell>
+                                      <TableCell component="th" id={labelId} scope="row" align="left">
+                                          <Link color="secondary" component={RouterLink} to="">
+                                              {row.botName}
+                                          </Link>
+                                      </TableCell>
+                                      <TableCell align="left">{row.strat_type}</TableCell>
+                                      <TableCell align="right">{row.timeframes}</TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                      <TableCell colSpan={5} sx={{ paddingTop: 0, paddingBottom:0, border: 0}}>
+                                          <Collapse in={open === index} timeout={"auto"} unmountOnExit>
+                                              <Stack direction={"row"} alignItems={"center"} sx={{ paddingTop: 3 }}>
+                                                  <Typography>Timeframes: </Typography>
+                                                  {row.timeframes.map((tf) => {
+                                                      return (
+                                                        <Button
+                                                          size="medium"
+                                                          sx={{ justifyItems: "right"}}
 
-                                </TableRow>
+                                                          // onClick={() => setSlot('week')}
+                                                          // color={slot === 'week' ? 'primary' : 'secondary'}
+                                                          // variant={slot === 'week' ? 'outlined' : 'text'}
+                                                        > {tf} </Button>
+                                                      );
+                                                  })}
+                                              </Stack>
+                                              <Stack direction={"row"} alignItems={"center"} sx={{ paddingTop: 3 }}>
+                                                  <Typography>Trading Pairs: </Typography>
+                                                  {row.trading_pairs.map((tp) => {
+                                                      return (
+                                                        <Button
+                                                          size="medium"
+                                                          sx={{ justifyItems: "right"}}
+                                                        > {tp} </Button>
+                                                      );
+                                                  })}
+                                              </Stack>
+                                              <Stack direction={"row"}>
+                                                  <Typography sx={{ paddingRight: 3}}>About Bot: </Typography>
+                                                  <Typography>{row.about_bot}</Typography>
+                                              </Stack>
+                                          </Collapse>
+                                      </TableCell>
+                                  </TableRow>
+                              </Fragment>
                             );
                         })}
                     </TableBody>
