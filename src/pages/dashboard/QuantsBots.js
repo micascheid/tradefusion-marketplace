@@ -11,34 +11,10 @@ import NumberFormat from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 
-function createData(trackingNo, name, fat, carbs, protein) {
-    return { trackingNo, name, fat, carbs, protein };
-}
 
-const tradeData = (botName, position, pnl) => {
-    return { botName, position, pnl }
+const botsData = (botName, strat_type, timeframes) => {
+    return { botName, strat_type, timeframes }
 }
-
-const rows = [
-    tradeData("CSP1", "Short", 2),
-    tradeData("CSP2", "Short", .5),
-    tradeData("CSP3", "Long", 3),
-    tradeData("CSP4", "Short", -.5),
-    tradeData("CSP5", "Long", -3),
-    tradeData("CSP6", "Short", -2.1),
-    tradeData("CSP7", "Short", 2),
-    tradeData("CSP8", "Short", .5),
-    tradeData("CSP9", "Long", 3),
-    tradeData("CSP10", "Short", -.5),
-    tradeData("CSP11", "Long", -3),
-    tradeData("CSP12", "Short", -2.1),
-    tradeData("CSP13", "Short", 2),
-    tradeData("CSP14", "Short", .5),
-    tradeData("CSP15", "Long", 3),
-    tradeData("CSP16", "Short", -.5),
-    tradeData("CSP17", "Long", -3),
-    tradeData("CSP18", "Short", -2.1)
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -76,16 +52,16 @@ const headCells = [
         label: 'Bot'
     },
     {
-        id: 'position',
+        id: 'strat_type',
         align: 'left',
         disablePadding: true,
-        label: 'Position'
+        label: 'Strategy Type'
     },
     {
-        id: 'pnl',
+        id: 'timeframes',
         align: 'right',
         disablePadding: false,
-        label: 'PnL'
+        label: 'Timeframes'
     },
 ];
 
@@ -153,12 +129,18 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function OrderTable() {
+export default function QuantsBots(props) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
 
+    const rows = Object.keys(props.quant.bots).map((name) => {
+        return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes.toString())
+    })
+
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+
+
 
     return (
         <Box>
@@ -204,14 +186,9 @@ export default function OrderTable() {
                                             {row.botName}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="left">{row.position}</TableCell>
-                                    <TableCell align="right">{row.pnl}</TableCell>
-                                    {/*<TableCell align="left">*/}
-                                    {/*    <OrderStatus status={row.carbs} />*/}
-                                    {/*</TableCell>*/}
-                                    {/*<TableCell align="right">*/}
-                                    {/*    <NumberFormat value={row.protein} displayType="text" thousandSeparator prefix="$" />*/}
-                                    {/*</TableCell>*/}
+                                    <TableCell align="left">{row.strat_type}</TableCell>
+                                    <TableCell align="right">{row.timeframes}</TableCell>
+
                                 </TableRow>
                             );
                         })}

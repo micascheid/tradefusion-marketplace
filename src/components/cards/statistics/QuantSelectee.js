@@ -8,12 +8,13 @@ import MainCard from 'components/MainCard';
 
 // assets
 import { RiseOutlined, FallOutlined } from '@ant-design/icons';
+import {blueGrey} from "@mui/material/colors";
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const TOTALBOTS = "Total Bots:";
 const QuantSelectee = ({ color, quantName, totalBots }) => (
-    <MainCard contentSX={{ p: 2.25 }}>
+    <MainCard contentSX={{ p: 2.25 }} >
         <Stack spacing={0.5}>
             <Typography variant="h6" color="textSecondary">
                 {quantName}

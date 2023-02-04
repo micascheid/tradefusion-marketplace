@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 // project import
-import OrdersTable from './OrdersTable';
+import OrdersTable from './QuantsBots';
 import IncomeAreaChart from './IncomeAreaChart';
 import MonthlyBarChart from './MonthlyBarChart';
 import ReportAreaChart from './ReportAreaChart';
@@ -23,6 +23,7 @@ import QuantSelectee from 'components/cards/statistics/QuantSelectee';
 
 import TradeHistoryTable from "./TradeHistoryTable";
 import AvailableQuants from "./AvailableQuants";
+import QuantsBots from "./QuantsBots";
 
 // avatar style
 const avatarSX = {
@@ -62,20 +63,12 @@ const status = [
 const DashboardDefault = () => {
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
+  const defaultQuant = {id: "mica", bots:
+      {csp:
+          {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}}};
 
+  const [currentQuant, setQuant] = useState(defaultQuant);
 
-  // const fetchPost = async () =>
-  // {
-  //   const docRef = doc(db, "quant_names", "mica");
-  //
-  //   const querySnapshot = await getDoc(docRef);
-  //   console.log(querySnapshot.data());
-  //   // querySnapshot.forEach((doc) => {
-  //   //   // doc.data() is never undefined for query doc snapshots
-  //   //   console.log(doc.id, " => ", doc.data());
-  //   // });
-  // }
-  // fetchPost().then();
 
   const fetchQuants = async () => {
     const querySnapshot = await getDocs(collection(db, "quant_names"));
@@ -86,6 +79,9 @@ const DashboardDefault = () => {
     return querySnapshot;
   }
 
+  const onSelectedQuant = (selectedQuant) => {
+    setQuant(selectedQuant);
+  }
 
 
   return (
@@ -94,33 +90,19 @@ const DashboardDefault = () => {
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <Stack>
           <Grid item>
-            <Typography variant="h5">Quant Bro's Bots</Typography>
+            <Typography variant="h5">{currentQuant.id}</Typography>
             <Box/>
           </Grid>
           <Grid item/>
           <MainCard sx={{mt: 2}} content={false}>
-            <OrdersTable/>
+            <QuantsBots quant={currentQuant}/>
           </MainCard>
         </Stack>
       </Grid>
 
       {/* Populates the first rows of cards conaining Qaunts available */}
       <Grid item xs={8}>
-        {/*<Grid container justifyContent="space-between" spacing={2}>*/}
-        {/*  <Grid item xs={12}>*/}
-        {/*    <Typography variant="h5">Available Qaunts</Typography>*/}
-        {/*  </Grid>*/}
-        {/*  <Grid item xs={12} lg={4}>*/}
-        {/*    <QuantSelectee totalBots="35,000"/>*/}
-        {/*  </Grid>*/}
-        {/*  <Grid item xs={12} lg={4}>*/}
-        {/*    <QuantSelectee extra="35,000"/>*/}
-        {/*  </Grid>*/}
-        {/*  <Grid item xs={12} lg={4}>*/}
-        {/*    <QuantSelectee extra="35,000"/>*/}
-        {/*  </Grid>*/}
-        {/*</Grid>*/}
-        <AvailableQuants quants={fetchQuants()}/>
+        <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchQuants()}/>
         <Box sx={{pt:4}}/>
         <Grid container spacing={2}>
           <Grid item xs={12}>
