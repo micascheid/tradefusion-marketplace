@@ -86,6 +86,7 @@ const headCells = [
     },
 ];
 
+const infoForTradeHistory = {};
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
 function QuantsBotsTableHead({ order, orderBy }) {
@@ -155,10 +156,25 @@ export default function QuantsBots(props) {
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
     const [open, setOpen] = useState(-1);
-
     const rows = Object.keys(props.quant.bots).map((name) => {
         return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes, props.quant.bots[name].trading_pairs, props.quant.bots[name].about_bot)
     })
+
+    const addTF = tf => {
+        infoForTradeHistory["tf"] = tf;
+        props.infoForTradeHistory(infoForTradeHistory);
+    }
+    const addPair = pair => {
+        infoForTradeHistory["pair"] = pair;
+        props.infoForTradeHistory(infoForTradeHistory);
+    }
+
+    const addBotName = botName => {
+        infoForTradeHistory["tf"] = "";
+        infoForTradeHistory["pair"] = "";
+        infoForTradeHistory["botName"] = botName;
+        props.infoForTradeHistory(infoForTradeHistory);
+    }
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -190,7 +206,6 @@ export default function QuantsBots(props) {
                         {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
-                            console.log(row.about_bot);
                             return (
                               <Fragment>
                                   <TableRow
@@ -205,10 +220,11 @@ export default function QuantsBots(props) {
                                       <TableCell>
                                           <IconButton onClick={() => setOpen((open === index ? -1 : index))}>
                                               {open === index ? (
-                                                <KeyboardArrowUp/>
+                                                <KeyboardArrowUp onClick={() => addBotName(row.botName)}/>
                                               ) : (
-                                                <KeyboardArrowDown/>
+                                                <KeyboardArrowDown onClick={() => addBotName(row.botName)}/>
                                               )}
+
                                           </IconButton>
                                       </TableCell>
                                       <TableCell component="th" id={labelId} scope="row" align="left">
@@ -227,12 +243,9 @@ export default function QuantsBots(props) {
                                                   {row.timeframes.map((tf) => {
                                                       return (
                                                         <Button
+                                                          onClick={() => addTF(tf)}
                                                           size="medium"
                                                           sx={{ justifyItems: "right"}}
-
-                                                          // onClick={() => setSlot('week')}
-                                                          // color={slot === 'week' ? 'primary' : 'secondary'}
-                                                          // variant={slot === 'week' ? 'outlined' : 'text'}
                                                         > {tf} </Button>
                                                       );
                                                   })}
@@ -242,6 +255,7 @@ export default function QuantsBots(props) {
                                                   {row.trading_pairs.map((tp) => {
                                                       return (
                                                         <Button
+                                                          onClick={() => addPair(tp)}
                                                           size="medium"
                                                           sx={{ justifyItems: "right"}}
                                                         > {tp} </Button>

@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+
+// firestore
+import { db } from '../../FirebaseConfig';
 
 // third-party
 import NumberFormat from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
+import {collection, getDocs} from "firebase/firestore";
 
 const tradeData = (time, botName, position, pnl) => {
     return { time, botName, position, pnl }
@@ -147,13 +151,26 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function TradeHistoryTable() {
+export default function TradeHistoryTable(props) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
+    const [thData, setTHData] = useState([]);
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+    const thDBParamsCaller = () => {
+        const params = props.thDBParams;
+        console.log("DBPARAMS: ", params);
+        console.log("Being called for TH");
+        const botName = params["botName"];
+        const tf = params["tf"];
+        const pair = params["pair"];
 
+        return "";
+    }
+
+
+    // thDBParamsCaller();
     return (
         <Box>
             <TableContainer
@@ -179,10 +196,10 @@ export default function TradeHistoryTable() {
                 >
                     <OrderTableHead order={order} orderBy={orderBy} />
                     <TableBody>
-                        {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                        {stableSort(props.thDBParams, getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
-
+                            console.log();
                             return (
                                 <TableRow
                                     hover

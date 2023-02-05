@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { collection, doc, getDoc, getDocs, firestore } from 'firebase/firestore';
+import {useState} from 'react';
+import {collection, doc, getDoc, getDocs, firestore} from 'firebase/firestore';
 
-import { db } from  '../../FirebaseConfig';
+import {db} from '../../FirebaseConfig';
 // material-ui
 import {
   Box,
@@ -11,11 +11,6 @@ import {
 } from '@mui/material';
 
 // project import
-import OrdersTable from './QuantsBots';
-import IncomeAreaChart from './IncomeAreaChart';
-import MonthlyBarChart from './MonthlyBarChart';
-import ReportAreaChart from './ReportAreaChart';
-import SalesColumnChart from './SalesColumnChart';
 import MainCard from 'components/MainCard';
 import QuantSelectee from 'components/cards/statistics/QuantSelectee';
 
@@ -57,30 +52,66 @@ const status = [
     label: 'This Year'
   }
 ];
+const tradeData = (time, botName, position, pnl) => {
+  return {time, botName, position, pnl}
+}
 
+const rows = [
+  tradeData(1,"CSP", "Short", 2),
+  tradeData(2,"CSP", "Short", .5),
+  tradeData(3,"CSP", "Long", 3),
+  tradeData(4,"CSP", "Short", -.5),
+  tradeData(5,"CSP", "Long", -3),
+  tradeData(6,"CSP", "Short", -2.1),
+  tradeData(7,"CSP", "Short", 2),
+  tradeData(8,"CSP", "Short", .5),
+  tradeData(9,"CSP", "Long", 3),
+  tradeData(10,"CSP", "Short", -.5),
+];
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
-
 const DashboardDefault = () => {
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
-  const defaultQuant = {id: "mica", bots:
-      {csp:
-          {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}}};
+  const [infoForTH, setInfoForTH] = useState(rows);
+  const defaultQuant = {
+    id: "mica", bots:
+      {
+        csp:
+          {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}
+      }
+  };
 
   const [currentQuant, setQuant] = useState(defaultQuant);
 
 
   const fetchQuants = async () => {
     const querySnapshot = await getDocs(collection(db, "quant_names"));
-    // querySnapshot.forEach((doc) =>{
-    //   console.log(doc.id, '=>', doc.data());
-    // });
-    console.log()
     return querySnapshot;
   }
 
   const onSelectedQuant = (selectedQuant) => {
     setQuant(selectedQuant);
+  }
+
+  const thHandler = async (dict) => {
+    // console.log(dict);
+    const bn = dict["botName"];
+    const queryPath = `trade_history/${dict["botName"]}/${dict["tf"]}${dict["pair"]}`
+    if (dict["tf"] !== "" && dict["pair"] !== "" && dict["botName"] !== "") {
+      console.log("LETS SET SOME STUFF!", dict);
+      await getDocs(collection(db, queryPath))
+        .then((querySnapshot) => {
+          const rowData = querySnapshot.docs.map((doc, index) => (
+            tradeData(index, bn, doc.data().position, doc.data().pnl)
+          ));
+          console.log("ROW DATA: ", rowData);
+          setInfoForTH(rowData);
+        })
+      // const queryPath = `trade_history/${dict["botName"]}/${dict["tf"]}${dict["pair"]}`
+      // console.log("QUERY PATH: ", queryPath);
+      // const data = await getDocs(collection(db, queryPath));
+      // console.log("DATA DOCS:", data.docs);
+    }
   }
 
 
@@ -95,7 +126,7 @@ const DashboardDefault = () => {
           </Grid>
           <Grid item/>
           <MainCard sx={{mt: 2}} content={false}>
-            <QuantsBots quant={currentQuant}/>
+            <QuantsBots infoForTradeHistory={thHandler} quant={currentQuant}/>
           </MainCard>
         </Stack>
       </Grid>
@@ -103,14 +134,14 @@ const DashboardDefault = () => {
       {/* Populates the first rows of cards conaining Qaunts available */}
       <Grid item xs={8}>
         <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchQuants()}/>
-        <Box sx={{pt:4}}/>
+        <Box sx={{pt: 4}}/>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5">Trade History</Typography>
           </Grid>
           <Grid item xs={12}>
             <MainCard>
-              <TradeHistoryTable/>
+              <TradeHistoryTable thDBParams={infoForTH}/>
             </MainCard>
           </Grid>
         </Grid>

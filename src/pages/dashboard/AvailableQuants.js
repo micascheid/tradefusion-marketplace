@@ -14,14 +14,12 @@ export default function AvailableQuants(props) {
     await getDocs(collection(db, "quant_names"))
       .then((querySnapshot)=>{
         const newData = querySnapshot.docs.map((doc) => ({...doc.data(), id:doc.id}));
-        console.log(newData);
         setQuants(newData);
       })
 
   }
 
   const onClickHandler = quant => {
-    console.log(quant);
 
     props.onSelectedQuant(quant);
   }
