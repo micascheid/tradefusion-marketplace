@@ -14,6 +14,8 @@ import NumberFormat from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 import {collection, getDocs} from "firebase/firestore";
+import {isEmptyArray} from "formik";
+import {useTheme} from "@mui/material/styles";
 
 const tradeData = (time, botName, position, pnl) => {
     return { time, botName, position, pnl }
@@ -156,6 +158,7 @@ export default function TradeHistoryTable(props) {
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
     const [thData, setTHData] = useState([]);
+    const theme = useTheme();
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
     const thDBParamsCaller = () => {
@@ -196,7 +199,7 @@ export default function TradeHistoryTable(props) {
                 >
                     <OrderTableHead order={order} orderBy={orderBy} />
                     <TableBody>
-                        {stableSort(props.thDBParams, getComparator(order, orderBy)).map((row, index) => {
+                        {props.thDBParams.length > 0 && stableSort(props.thDBParams, getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
                             console.log();
@@ -204,7 +207,7 @@ export default function TradeHistoryTable(props) {
                                 <TableRow
                                     hover
                                     role="checkbox"
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, height: 35 }}
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     key={row.time}
@@ -221,6 +224,13 @@ export default function TradeHistoryTable(props) {
                                 </TableRow>
                             );
                         })}
+                        {props.thDBParams.length === 0 &&
+                        <TableRow sx={{ backgroundColor: theme.palette.action.focus}}>
+                            <TableCell align={"center"} colSpan={5}>
+                            Select a Quant, a bot, timeframe and trading pair to see some history!
+                            </TableCell>
+                        </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

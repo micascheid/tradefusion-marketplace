@@ -4,6 +4,7 @@ import {collection, doc, getDoc, getDocs, firestore} from 'firebase/firestore';
 import {db} from '../../FirebaseConfig';
 // material-ui
 import {
+  Backdrop,
   Box,
   Grid,
   Stack,
@@ -19,6 +20,8 @@ import QuantSelectee from 'components/cards/statistics/QuantSelectee';
 import TradeHistoryTable from "./TradeHistoryTable";
 import AvailableQuants from "./AvailableQuants";
 import QuantsBots from "./QuantsBots";
+import LiveTrade from "./LiveTrade";
+import {isEmptyArray} from "formik";
 
 // avatar style
 const avatarSX = {
@@ -56,23 +59,16 @@ const tradeData = (time, botName, position, pnl) => {
   return {time, botName, position, pnl}
 }
 
-const rows = [
-  tradeData(1,"CSP", "Short", 2),
-  tradeData(2,"CSP", "Short", .5),
-  tradeData(3,"CSP", "Long", 3),
-  tradeData(4,"CSP", "Short", -.5),
-  tradeData(5,"CSP", "Long", -3),
-  tradeData(6,"CSP", "Short", -2.1),
-  tradeData(7,"CSP", "Short", 2),
-  tradeData(8,"CSP", "Short", .5),
-  tradeData(9,"CSP", "Long", 3),
-  tradeData(10,"CSP", "Short", -.5),
-];
+const rows = [];
+
+for (let i=0; i < 10; i++){
+  rows.push(tradeData("","","",""));
+}
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 const DashboardDefault = () => {
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
-  const [infoForTH, setInfoForTH] = useState(rows);
+  const [infoForTH, setInfoForTH] = useState([]);
   const defaultQuant = {
     id: "mica", bots:
       {
@@ -131,10 +127,18 @@ const DashboardDefault = () => {
         </Stack>
       </Grid>
 
-      {/* Populates the first rows of cards conaining Qaunts available */}
+      {/* Right side of the dashboard */}
       <Grid item xs={8}>
+        {/* Populates the first rows of cards containing Quants available */}
         <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchQuants()}/>
         <Box sx={{pt: 4}}/>
+        {/* Live trade box */}
+        <Grid container spacing={2}>
+          <Grid item={12}>
+            <LiveTrade></LiveTrade>
+          </Grid>
+        </Grid>
+        {/* TradeHistory Table */}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5">Trade History</Typography>
