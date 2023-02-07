@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+
+// firestore
+import { db } from '../../FirebaseConfig';
 
 // third-party
 import NumberFormat from 'react-number-format';
 
 // project import
 import Dot from 'components/@extended/Dot';
+import {collection, getDocs} from "firebase/firestore";
+import {isEmptyArray} from "formik";
+import {useTheme} from "@mui/material/styles";
 
 const tradeData = (time, botName, position, pnl) => {
     return { time, botName, position, pnl }
@@ -147,13 +153,27 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function TradeHistoryTable() {
+export default function TradeHistoryTable(props) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
+    const [thData, setTHData] = useState([]);
+    const theme = useTheme();
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+    const thDBParamsCaller = () => {
+        const params = props.thDBParams;
+        console.log("DBPARAMS: ", params);
+        console.log("Being called for TH");
+        const botName = params["botName"];
+        const tf = params["tf"];
+        const pair = params["pair"];
 
+        return "";
+    }
+
+
+    // thDBParamsCaller();
     return (
         <Box>
             <TableContainer
@@ -179,15 +199,15 @@ export default function TradeHistoryTable() {
                 >
                     <OrderTableHead order={order} orderBy={orderBy} />
                     <TableBody>
-                        {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                        {props.thDBParams.length > 0 && stableSort(props.thDBParams, getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
-
+                            console.log();
                             return (
                                 <TableRow
                                     hover
                                     role="checkbox"
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, height: 35 }}
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     key={row.time}
@@ -204,6 +224,13 @@ export default function TradeHistoryTable() {
                                 </TableRow>
                             );
                         })}
+                        {props.thDBParams.length === 0 &&
+                        <TableRow sx={{ backgroundColor: theme.palette.action.focus}}>
+                            <TableCell align={"center"} colSpan={5}>
+                            Select a Quant, a bot, timeframe and trading pair to see some history!
+                            </TableCell>
+                        </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
