@@ -1,59 +1,84 @@
 import PropTypes from 'prop-types';
 
 // material-ui
-import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import {Avatar, Box, Card, Chip, Grid, Stack, Typography} from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
+import { alpha, styled } from '@mui/material/styles';
 
 // assets
-import { RiseOutlined, FallOutlined } from '@ant-design/icons';
-import {blueGrey} from "@mui/material/colors";
+import Iconify from '../../../components/iconify';
+import theme from "../../../themes/theme";
+
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const TOTALBOTS = "Total Bots:";
-const QuantSelectee = ({ color, quantName, totalBots }) => (
-    <MainCard contentSX={{ p: 2.25 }} >
-        <Stack spacing={0.5}>
-            <Typography variant="h6" color="textSecondary">
-                {quantName}
-            </Typography>
-            <Grid container alignItems="center">
-                <Grid item>
-                    <Typography variant="h4" color="inherit">
-                        {TOTALBOTS}
-                    </Typography>
-                </Grid>
-                {totalBots && (
-                    <Grid item>
-                        <Chip
-                            variant="combined"
-                            color={color}
-                            // icon={
-                            //     <>
-                            //         {!isLoss && <RiseOutlined style={{ fontSize: '0.75rem', color: 'inherit' }} />}
-                            //         {isLoss && <FallOutlined style={{ fontSize: '0.75rem', color: 'inherit' }} />}
-                            //     </>
-                            // }
-                            label={`${totalBots}`}
-                            sx={{ ml: 1.25 }}
-                            size="small"
-                        />
-                    </Grid>
-                )}
-            </Grid>
-        </Stack>
-        <Box sx={{ pt: 2.25 }}>
-            <Typography variant="caption" color="textSecondary">
-                You made an extra{' '}
-                <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
-                    {35}
-                </Typography>{' '}
-                this year
-            </Typography>
-        </Box>
-    </MainCard>
+
+const StyledIcon = styled('div')(({ theme }) => ({
+    margin: 'auto',
+    display: 'flex',
+    borderRadius: '50%',
+    alignItems: 'center',
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+    justifyContent: 'center',
+    marginBottom: theme.spacing(3),
+}));
+const QuantSelectee = ({ title, icon, sx, color = 'primary', quantName, totalBots }) => (
+    // <MainCard contentSX={{ p: 2.25, backgroundColor: color }} >
+    //     <Stack spacing={0.5}>
+    //         <Typography variant="h6" color="textSecondary">
+    //             {quantName}
+    //         </Typography>
+    //         <Grid container alignItems="center">
+    //             <Grid item>
+    //                 <Typography variant="h4" color="inherit">
+    //                     {TOTALBOTS}
+    //                 </Typography>
+    //             </Grid>
+    //             {totalBots && (
+    //                 <Grid item>
+    //                     <Chip
+    //                         variant="combined"
+    //                         color={color}
+    //                         label={`${totalBots}`}
+    //                         sx={{ ml: 1.25 }}
+    //                         size="small"
+    //                     />
+    //                 </Grid>
+    //             )}
+    //         </Grid>
+    //     </Stack>
+    //     <Box sx={{ pt: 2.25 }}>
+    //         <Typography variant="caption" color="textSecondary">
+    //             You made an extra{' '}
+    //             <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
+    //                 {35}
+    //             </Typography>{' '}
+    //             this year
+    //         </Typography>
+    //     </Box>
+    // </MainCard>
+  <MainCard
+    sx={{
+        py: 0,
+        boxShadow: 0,
+        textAlign: 'center',
+        color: (theme) => theme.palette[color].darker,
+        bgcolor: (theme) => theme.palette[color].lighter,
+    }}
+  >
+      <Typography variant="h3">{quantName}</Typography>
+      <Avatar alt={quantName} src={icon} sx={{margin:"auto", width: 60, height: 60}}></Avatar>
+
+      <Typography variant="h3">{totalBots}</Typography>
+
+      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+          {title}
+      </Typography>
+  </MainCard>
 );
 
 QuantSelectee.propTypes = {

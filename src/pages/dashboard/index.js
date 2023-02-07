@@ -66,9 +66,6 @@ for (let i=0; i < 10; i++){
 }
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 const DashboardDefault = () => {
-  const [value, setValue] = useState('today');
-  const [slot, setSlot] = useState('week');
-  const [infoForTH, setInfoForTH] = useState([]);
   const defaultQuant = {
     id: "mica", bots:
       {
@@ -76,7 +73,9 @@ const DashboardDefault = () => {
           {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}
       }
   };
-
+  const [value, setValue] = useState('today');
+  const [slot, setSlot] = useState('week');
+  const [infoForTH, setInfoForTH] = useState([]);
   const [currentQuant, setQuant] = useState(defaultQuant);
 
 
@@ -90,7 +89,6 @@ const DashboardDefault = () => {
   }
 
   const thHandler = async (dict) => {
-    // console.log(dict);
     const bn = dict["botName"];
     const queryPath = `trade_history/${dict["botName"]}/${dict["tf"]}${dict["pair"]}`
     if (dict["tf"] !== "" && dict["pair"] !== "" && dict["botName"] !== "") {
@@ -103,10 +101,6 @@ const DashboardDefault = () => {
           console.log("ROW DATA: ", rowData);
           setInfoForTH(rowData);
         })
-      // const queryPath = `trade_history/${dict["botName"]}/${dict["tf"]}${dict["pair"]}`
-      // console.log("QUERY PATH: ", queryPath);
-      // const data = await getDocs(collection(db, queryPath));
-      // console.log("DATA DOCS:", data.docs);
     }
   }
 
@@ -133,11 +127,11 @@ const DashboardDefault = () => {
         <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchQuants()}/>
         <Box sx={{pt: 4}}/>
         {/* Live trade box */}
-        <Grid container spacing={2}>
-          <Grid item={12}>
-            <LiveTrade></LiveTrade>
-          </Grid>
-        </Grid>
+        {/*<Grid container spacing={2}>*/}
+        {/*  <Grid item={12}>*/}
+        {/*    <LiveTrade></LiveTrade>*/}
+        {/*  </Grid>*/}
+        {/*</Grid>*/}
         {/* TradeHistory Table */}
         <Grid container spacing={2}>
           <Grid item xs={12}>

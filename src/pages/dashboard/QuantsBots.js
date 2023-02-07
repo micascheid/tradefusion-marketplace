@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 
 // material-ui
@@ -25,6 +25,8 @@ import NumberFormat from 'react-number-format';
 // project import
 import Dot from 'components/@extended/Dot';
 import {blueGrey} from "@mui/material/colors";
+
+import { useTheme } from '@mui/material/styles';
 
 
 const botsData = (botName, strat_type, timeframes, trading_pairs, about_bot) => {
@@ -153,15 +155,19 @@ OrderStatus.propTypes = {
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function QuantsBots(props) {
+  const theme = useTheme();
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const [open, setOpen] = useState(-1);
   const [tfSlot, setTFSlot] = useState('');
   const [tpSlot, setTPSlot] = useState('');
+  const [currentQuantName, setCurentQuantName] = useState(props.quant.id);
   const rows = Object.keys(props.quant.bots).map((name) => {
     return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes, props.quant.bots[name].trading_pairs, props.quant.bots[name].about_bot)
   })
+
+  console.log("ID OF QUANT: ", props.quant.id);
 
   const addTF = tf => {
     infoForTradeHistory["tf"] = tf;
@@ -182,6 +188,14 @@ export default function QuantsBots(props) {
     infoForTradeHistory["botName"] = botName;
     props.infoForTradeHistory(infoForTradeHistory);
   }
+
+  useEffect(() =>{
+    console.log("USE EFFECT IN QUANTS BOTS");
+    if (props.quant.id !== currentQuantName){
+      setCurentQuantName(props.quant.id);
+      setOpen(-1);
+    }
+  },[currentQuantName, props.quant.id])
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
