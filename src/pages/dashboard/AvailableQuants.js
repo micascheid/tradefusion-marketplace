@@ -11,7 +11,7 @@ import TFLogo from '../../assets/images/tradefusion_avatar.png';
 export default function AvailableQuants(props) {
   const theme = useTheme();
   const test = ['mica', 'rando'];
-  const [fetchedQuants, setQuants] = useState(['mica', 'rando']);
+  const [fetchedQuants, setQuants] = useState([]);
   const [isSelected, setIsSelected] = useState();
 
   const fetchQuants = async () => {
@@ -41,8 +41,8 @@ export default function AvailableQuants(props) {
       {fetchedQuants.map((quant,index) => (
           <Grid key={index} item xs={12} sm={6} lg={4}>
             <CardActionArea onClick={() => onClickHandler(quant, index)}>
-              {isSelected === index && <QuantSelectee title="Total Bots" totalBots={"3"} color="info" icon={TFLogo} quantName={quant.id}/>}
-              {isSelected !== index && <QuantSelectee title="Total Bots" totalBots={"3"} color="secondary" icon={TFLogo} quantName={quant.id}/>}
+              {isSelected === index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="info" icon={TFLogo} quantName={quant.id}/>}
+              {isSelected !== index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="secondary" icon={TFLogo} quantName={quant.id}/>}
             </CardActionArea>
           </Grid>
         ))
@@ -50,4 +50,3 @@ export default function AvailableQuants(props) {
     </Grid>
   );
 }
-

@@ -3,7 +3,19 @@ import {useEffect, useState} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {
+    Box,
+    Link,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Typography
+} from '@mui/material';
 
 // firestore
 import { db } from '../../FirebaseConfig';
@@ -20,19 +32,6 @@ import {useTheme} from "@mui/material/styles";
 const tradeData = (time, botName, position, pnl) => {
     return { time, botName, position, pnl }
 }
-
-const rows = [
-    tradeData(1,"CSP", "Short", 2),
-    tradeData(2,"CSP", "Short", .5),
-    tradeData(3,"CSP", "Long", 3),
-    tradeData(4,"CSP", "Short", -.5),
-    tradeData(5,"CSP", "Long", -3),
-    tradeData(6,"CSP", "Short", -2.1),
-    tradeData(7,"CSP", "Short", 2),
-    tradeData(8,"CSP", "Short", .5),
-    tradeData(9,"CSP", "Long", 3),
-    tradeData(10,"CSP", "Short", -.5),
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -155,9 +154,10 @@ OrderStatus.propTypes = {
 
 export default function TradeHistoryTable(props) {
     const [order] = useState('asc');
-    const [orderBy] = useState('trackingNo');
+    const [orderBy] = useState('time');
     const [selected] = useState([]);
-    const [thData, setTHData] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const theme = useTheme();
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
@@ -172,8 +172,13 @@ export default function TradeHistoryTable(props) {
         return "";
     }
 
-
-    // thDBParamsCaller();
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
     return (
         <Box>
             <TableContainer
@@ -183,10 +188,13 @@ export default function TradeHistoryTable(props) {
                     position: 'relative',
                     display: 'block',
                     maxWidth: '100%',
-                    '& td, & th': { whiteSpace: 'nowrap' }
+                    '& td, & th': { whiteSpace: 'nowrap' },
+                    maxHeight: 440,
+                    minHeight: 440
                 }}
             >
                 <Table
+                    stickyHeader
                     aria-labelledby="tableTitle"
                     sx={{
                         '& .MuiTableCell-root:first-of-type': {
@@ -199,10 +207,9 @@ export default function TradeHistoryTable(props) {
                 >
                     <OrderTableHead order={order} orderBy={orderBy} />
                     <TableBody>
-                        {props.thDBParams.length > 0 && stableSort(props.thDBParams, getComparator(order, orderBy)).map((row, index) => {
+                        {props.thDBParams.length > 0 && stableSort(props.thDBParams.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage), getComparator(order, orderBy)).map((row, index) => {
                             const isItemSelected = isSelected(row.botName);
                             const labelId = `enhanced-table-checkbox-${index}`;
-                            console.log();
                             return (
                                 <TableRow
                                     hover
@@ -234,6 +241,12 @@ export default function TradeHistoryTable(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePagination count={props.thDBParams.length}
+                             component="div"
+                             page={page}
+                             rowsPerPage={rowsPerPage}
+                             onPageChange={handleChangePage}
+                             onRowsPerPageChange={handleChangeRowsPerPage}/>
         </Box>
     );
 }

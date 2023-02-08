@@ -67,7 +67,7 @@ for (let i=0; i < 10; i++){
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 const DashboardDefault = () => {
   const defaultQuant = {
-    id: "mica", bots:
+    id: "default", bots:
       {
         csp:
           {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}
