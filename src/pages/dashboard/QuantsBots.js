@@ -148,11 +148,13 @@ export default function QuantsBots(props) {
   const addTF = tf => {
     infoForTradeHistory["tf"] = tf;
     props.infoForTradeHistory(infoForTradeHistory);
+    props.infoForTradeStatus(infoForTradeHistory);
     setTFSlot(tf);
   }
   const addPair = pair => {
     infoForTradeHistory["pair"] = pair;
     props.infoForTradeHistory(infoForTradeHistory);
+    props.infoForTradeStatus(infoForTradeHistory);
     setTPSlot(pair);
   }
 
@@ -163,6 +165,7 @@ export default function QuantsBots(props) {
     setTFSlot('');
     infoForTradeHistory["botName"] = botName;
     props.infoForTradeHistory(infoForTradeHistory);
+    props.infoForTradeStatus(infoForTradeHistory);
   }
 
   useEffect(() => {

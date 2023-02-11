@@ -163,8 +163,6 @@ export default function TradeHistoryTable(props) {
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
     const thDBParamsCaller = () => {
         const params = props.thDBParams;
-        console.log("DBPARAMS: ", params);
-        console.log("Being called for TH");
         const botName = params["botName"];
         const tf = params["tf"];
         const pair = params["pair"];
@@ -193,6 +191,7 @@ export default function TradeHistoryTable(props) {
                     minHeight: 440
                 }}
             >
+                <Typography variant="h4" sx={{pb: 3}}>Trade History</Typography>
                 <Table
                     stickyHeader
                     aria-labelledby="tableTitle"

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {React, useState} from 'react';
 import {collection, doc, getDoc, getDocs, firestore} from 'firebase/firestore';
 
 import {db} from '../../FirebaseConfig';
@@ -22,6 +22,7 @@ import AvailableQuants from "./AvailableQuants";
 import QuantsBots from "./QuantsBots";
 import LiveTrade from "./LiveTrade";
 import {isEmptyArray} from "formik";
+import {useTheme} from "@mui/material/styles";
 
 // avatar style
 const avatarSX = {
@@ -61,8 +62,8 @@ const tradeData = (time, botName, position, pnl) => {
 
 const rows = [];
 
-for (let i=0; i < 10; i++){
-  rows.push(tradeData("","","",""));
+for (let i = 0; i < 10; i++) {
+  rows.push(tradeData("", "", "", ""));
 }
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 const DashboardDefault = () => {
@@ -76,8 +77,9 @@ const DashboardDefault = () => {
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
   const [infoForTH, setInfoForTH] = useState([]);
+  const [infoForLiveTrade, setInfoForLiveTrade] = useState();
   const [currentQuant, setQuant] = useState(defaultQuant);
-
+  const theme = useTheme();
 
   const fetchQuants = async () => {
     const querySnapshot = await getDocs(collection(db, "quant_names"));
@@ -90,8 +92,10 @@ const DashboardDefault = () => {
 
   const thHandler = async (dict) => {
     const bn = dict["botName"];
-    const queryPath = `trade_history/${dict["botName"]}/${dict["tf"]}${dict["pair"]}`
-    if (dict["tf"] !== "" && dict["pair"] !== "" && dict["botName"] !== "") {
+    const tf = dict["tf"];
+    const pair = dict["pair"];
+    const queryPath = `trade_history/${bn}/${tf}${pair}`
+    if (tf !== "" && pair !== "" && bn !== "") {
       console.log("LETS SET SOME STUFF!", dict);
       await getDocs(collection(db, queryPath))
         .then((querySnapshot) => {
@@ -101,6 +105,22 @@ const DashboardDefault = () => {
           console.log("ROW DATA: ", rowData);
           setInfoForTH(rowData);
         })
+    }
+  }
+
+  const liveTradeHandler = async (dict) => {
+    const bn = dict["botName"];
+    const tf = dict["tf"];
+    const pair = dict["pair"];
+    const entry_name = tf+pair;
+    console.log(entry_name);
+    const queryPath = `entry/${bn}`
+    if (tf !== "" && pair !== "" && bn !== "") {
+      const docRef = doc(db, queryPath);
+      const querySnapshot = await getDoc(docRef);
+      const entryNameInfo = querySnapshot.data()[entry_name]
+      console.log("LIVE TRADE: ", querySnapshot.data()[entry_name]);
+      setInfoForLiveTrade(entryNameInfo);
     }
   }
 
@@ -116,7 +136,7 @@ const DashboardDefault = () => {
           </Grid>
           <Grid item/>
           <MainCard sx={{mt: 2}} content={false}>
-            <QuantsBots infoForTradeHistory={thHandler} quant={currentQuant}/>
+            <QuantsBots infoForTradeHistory={thHandler} infoForTradeStatus={liveTradeHandler} quant={currentQuant}/>
           </MainCard>
         </Stack>
       </Grid>
@@ -126,17 +146,27 @@ const DashboardDefault = () => {
         {/* Populates the first rows of cards containing Quants available */}
         <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchQuants()}/>
         <Box sx={{pt: 4}}/>
-        {/* Live trade box */}
-        {/*<Grid container spacing={2}>*/}
-        {/*  <Grid item={12}>*/}
-        {/*    <LiveTrade></LiveTrade>*/}
-        {/*  </Grid>*/}
-        {/*</Grid>*/}
-        {/* TradeHistory Table */}
+
+        {/*Live trade box */}
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h5">Trade History</Typography>
+            {Object.is(infoForLiveTrade, undefined) &&
+            <MainCard>
+              <Typography variant={"h4"} sx={{pb: 3}}>Bot in Real-Time</Typography>
+              <Box sx={{ alignItems: 'center', backgroundColor: theme.palette.grey.A200, display: 'flex', justifyContent: 'center', minHeight: 400}}>
+                <Typography variant={"h4"}>Select a quant, bot, timeframe and pair to see some live action!</Typography>
+              </Box>
+            </MainCard>
+            }
+            {!Object.is(infoForLiveTrade, undefined) &&
+              <LiveTrade liveTradeInfo={infoForLiveTrade}/>
+            }
           </Grid>
+        </Grid>
+        <Box sx={{pt: 4}}/>
+
+        {/*TradeHistory Table */}
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <MainCard>
               <TradeHistoryTable thDBParams={infoForTH}/>
