@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-
+import firebase from 'firebase/compat/app';
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 

@@ -29,6 +29,10 @@ import AnimateButton from 'components/@extended/AnimateButton';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
+//firebase import
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth } from '../../../FirebaseConfig';
+
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
@@ -59,10 +63,21 @@ const AuthLogin = () => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
+                        console.log("logging in...");
+                        signInWithEmailAndPassword(auth, values.email, values.password)
+                          .then((userCredential) => {
+                              const user = userCredential.user;
+                          })
+                          .catch((error) => {
+                              const errorCode = error.code;
+                              const errorMessage = error.message;
+                              console.log("error login message: ", errorMessage);
+                          })
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
                         setSubmitting(false);
+                        console.log("error login message: ", err.message);
                     }
                 }}
             >
