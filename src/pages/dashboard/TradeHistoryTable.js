@@ -66,7 +66,7 @@ const headCells = [
         id: 'time',
         align: 'left',
         disablePadding: false,
-        label: 'Time'
+        label: 'Time (UTC)'
     },
     {
         id: 'botName',
@@ -153,7 +153,7 @@ OrderStatus.propTypes = {
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function TradeHistoryTable(props) {
-    const [order] = useState('asc');
+    const [order] = useState('desc');
     const [orderBy] = useState('time');
     const [selected] = useState([]);
     const [page, setPage] = useState(0);

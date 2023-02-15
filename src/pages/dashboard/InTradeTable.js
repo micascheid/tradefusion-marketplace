@@ -67,4 +67,4 @@ const InTradeTable = (props) => {
   )
 }
 
-export default InTradeTable
+export default InTradeTable;

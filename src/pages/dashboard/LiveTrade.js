@@ -3,7 +3,7 @@ import {doc, getDoc} from 'firebase/firestore';
 import {db} from '../../FirebaseConfig';
 import InSearchTable from './InSearchTable';
 import {
-  Box,
+  Box, Divider,
   List,
   Stack,
   Table,
@@ -18,6 +18,8 @@ import MainCard from "../../components/MainCard";
 import Dot from "../../components/@extended/Dot";
 import {useTheme} from '@mui/material/styles';
 import InTradeTable from "./InTradeTable";
+import ExitTrade from "./ExitTrade";
+import ExitTradeFactory from "./FactoryLiveTrade/ExitTradeFactory";
 
 const LiveTrade = (props) => {
   const theme = useTheme();
@@ -25,6 +27,7 @@ const LiveTrade = (props) => {
   // let testObj = JSON.parse(`${props.liveTradeInfo["current_ind_val"]}`);
 
   const live_info = props.liveTradeInfo;
+
   live_trade_bool = live_info["live_trade"]["in_trade"];
   const currentIndLong = live_info["current_ind_long"];
   const currentIndShort = live_info["current_ind_short"];
@@ -32,21 +35,25 @@ const LiveTrade = (props) => {
   const currentIndVal = live_info["current_ind_val"];
   const liveTrade = live_info["live_trade"];
   // console.log(live_info["live_trade"]);
-
-
+  let botName = props.botInfo.bot;
+  const fl = botName.charAt(0).toUpperCase();
+  botName = fl+botName.slice(1);
 
   return (
     <MainCard>
-      <Typography variant={"h4"} sx={{pb: 3}}>Bot in Real-Time</Typography>
+      <Typography variant={"h4"} sx={{pb: 3}}>{botName} Bot in Real-Time</Typography>
       <List>
-        <Stack spacing={2} justifyContent="space-between" direction={"row"} sx={{pb:3}}>
-          <Stack spacing={2} direction={"row"} alignItems={"center"}>
-            <Typography variant={"h4"}>Trade Status: </Typography>
+        <Stack justifyContent="space-between" direction={"row"} sx={{pb: 3}}>
+          <Stack spacing={1} direction={"row"} alignItems={"center"}>
+            <Typography variant={"h5"}>Trade Status: </Typography>
             {live_trade_bool === "false" && <Dot size={20} color={'warning'}/>}
             {live_trade_bool === "true" && <Dot size={20} color={'success'}/>}
           </Stack>
-          <Typography variant={"h4"}>Last Closing Price: {lastClosingPrice}</Typography>
+          <Typography variant={"h5"}>Time Frame: {props.botInfo.tf}</Typography>
+          <Typography variant={"h5"}>Trading Pair: {props.botInfo.pair}</Typography>
+          <Typography variant={"h5"}>Last Closing Price: {lastClosingPrice}</Typography>
         </Stack>
+        <Divider />
         {live_trade_bool === "false" &&
           <Fragment>
             <InSearchTable position_type={"long"} current_ind={currentIndLong} current_ind_vals={currentIndVal}/>
@@ -54,7 +61,14 @@ const LiveTrade = (props) => {
           </Fragment>
         }
         {live_trade_bool === "true" &&
-          <InTradeTable current_ind_vals={liveTrade}/>
+          <Fragment>
+            <Typography variant={"h4"}sx={{pt:3}}>Current Trade</Typography>
+            <Stack direction={"column"} alignItems={"center"}>
+              <InTradeTable current_ind_vals={liveTrade}/>
+              <Divider/>
+              <ExitTradeFactory botName={props.botInfo.bot} currentIndVals={live_info}/>
+            </Stack>
+          </Fragment>
         }
 
       </List>

@@ -18,7 +18,7 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import {KeyboardArrowUp, KeyboardArrowDown} from '@mui/icons-material';
+import { KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material';
 // third-party
 import NumberFormat from 'react-number-format';
 
@@ -221,8 +221,8 @@ export default function QuantsBots(props) {
                     >
                       <TableCell>
                         <IconButton onClick={() => setOpen((open === index ? -1 : index))}>
-                          {open === index ? (<KeyboardArrowUp onClick={() => addBotName(row.botName)}/>) : (
-                            <KeyboardArrowDown onClick={() => addBotName(row.botName)}/>)}
+                          {open === index ? (<KeyboardArrowDown onClick={() => addBotName(row.botName)}/>) : (
+                            <KeyboardArrowRight onClick={() => addBotName(row.botName)}/>)}
 
                         </IconButton>
                       </TableCell>
@@ -275,5 +275,4 @@ export default function QuantsBots(props) {
           </Table>
         </TableContainer>)}
     </Box>);
-
 }

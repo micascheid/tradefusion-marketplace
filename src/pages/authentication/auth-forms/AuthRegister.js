@@ -30,6 +30,11 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
+// firebase auth
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {initializeApp} from "firebase/app";
+import {db, auth} from "../../../FirebaseConfig";
+
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const AuthRegister = () => {
@@ -73,11 +78,21 @@ const AuthRegister = () => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
+                        console.log("submitting new user...");
+                        createUserWithEmailAndPassword(auth, values.email, values.password)
+                          .then((userCredential) => {
+                              const user = userCredential.user;
+                          })
+                          .catch((error) => {
+                              const errorCode = error.code;
+                              const errorMessage = error.message;
+                          })
                     } catch (err) {
                         console.error(err);
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
                         setSubmitting(false);
+
                     }
                 }}
             >

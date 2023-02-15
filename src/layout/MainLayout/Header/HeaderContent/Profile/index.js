@@ -29,6 +29,10 @@ import SettingTab from './SettingTab';
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 
+//firebase
+import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import { auth } from '../../../../../FirebaseConfig';
+
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -55,9 +59,15 @@ function a11yProps(index) {
 
 const Profile = () => {
     const theme = useTheme();
-
+    const [profileName, setProfileName] = useState('Mica');
     const handleLogout = async () => {
         // logout
+        signOut(auth).then(() => {
+            console.log("User signed out");
+        }).catch((error) => {
+            console.log("unable to sign user out");
+        })
+
     };
 
     const anchorRef = useRef(null);
@@ -80,6 +90,15 @@ const Profile = () => {
     };
 
     const iconBackColorOpen = 'grey.300';
+    let name = '';
+    // onAuthStateChanged(auth, (user) => {
+    //     if (user){
+    //       console.log("MAKE IT TO USER?");
+    //         setProfileName(user.uid);
+    //     } else {
+    //         console.log("not logged in");
+    //     }
+    // });
 
     return (
         <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -98,7 +117,7 @@ const Profile = () => {
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
                     <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-                    <Typography variant="subtitle1">Mica Linscheid</Typography>
+                    <Typography variant="subtitle1">{profileName}</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -141,7 +160,7 @@ const Profile = () => {
                                                     <Stack direction="row" spacing={1.25} alignItems="center">
                                                         <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                                                         <Stack>
-                                                            <Typography variant="h6">Mica Linscheid</Typography>
+                                                            <Typography variant="h6">{profileName}</Typography>
                                                             <Typography variant="body2" color="textSecondary">
                                                                 UI/UX Designer
                                                             </Typography>
