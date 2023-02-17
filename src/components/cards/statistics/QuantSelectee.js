@@ -27,40 +27,6 @@ const StyledIcon = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 const QuantSelectee = ({ title, icon, sx, color = 'primary', quantName, totalBots }) => (
-    // <MainCard contentSX={{ p: 2.25, backgroundColor: color }} >
-    //     <Stack spacing={0.5}>
-    //         <Typography variant="h6" color="textSecondary">
-    //             {quantName}
-    //         </Typography>
-    //         <Grid container alignItems="center">
-    //             <Grid item>
-    //                 <Typography variant="h4" color="inherit">
-    //                     {TOTALBOTS}
-    //                 </Typography>
-    //             </Grid>
-    //             {totalBots && (
-    //                 <Grid item>
-    //                     <Chip
-    //                         variant="combined"
-    //                         color={color}
-    //                         label={`${totalBots}`}
-    //                         sx={{ ml: 1.25 }}
-    //                         size="small"
-    //                     />
-    //                 </Grid>
-    //             )}
-    //         </Grid>
-    //     </Stack>
-    //     <Box sx={{ pt: 2.25 }}>
-    //         <Typography variant="caption" color="textSecondary">
-    //             You made an extra{' '}
-    //             <Typography component="span" variant="caption" sx={{ color: `${color || 'primary'}.main` }}>
-    //                 {35}
-    //             </Typography>{' '}
-    //             this year
-    //         </Typography>
-    //     </Box>
-    // </MainCard>
   <MainCard
     sx={{
         py: 0,

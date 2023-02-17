@@ -39,10 +39,10 @@ export default function AvailableQuants(props) {
         <Typography variant="h5">Available Qaunts</Typography>
       </Grid>
       {fetchedQuants.map((quant,index) => (
-          <Grid key={index} item xs={12} sm={6} lg={4}>
+          <Grid key={index} item xs={12} sm={6} lg={6}>
             <CardActionArea onClick={() => onClickHandler(quant, index)}>
-              {isSelected === index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="info" icon={TFLogo} quantName={quant.id}/>}
-              {isSelected !== index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="secondary" icon={TFLogo} quantName={quant.id}/>}
+              {isSelected === index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="info" icon={TFLogo} quantName={quant.about.display_name}/>}
+              {isSelected !== index && <QuantSelectee title="Total Bots" totalBots={Object.keys(quant.bots).length.toString()} color="secondary" icon={TFLogo} quantName={quant.about.display_name}/>}
             </CardActionArea>
           </Grid>
         ))

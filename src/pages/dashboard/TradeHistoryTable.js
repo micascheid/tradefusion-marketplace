@@ -233,7 +233,7 @@ export default function TradeHistoryTable(props) {
                         {props.thDBParams.length === 0 &&
                         <TableRow sx={{ backgroundColor: theme.palette.action.focus}}>
                             <TableCell align={"center"} colSpan={5}>
-                            Select a Quant, a bot, timeframe and trading pair to see some history!
+                            There is no trade history available for the bot, timeframe and pair selected
                             </TableCell>
                         </TableRow>
                         }
