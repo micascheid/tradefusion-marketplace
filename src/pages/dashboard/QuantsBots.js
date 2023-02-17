@@ -62,13 +62,13 @@ function stableSort(array, comparator) {
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [{
-  id: 'collapsable', align: 'left', disablePadding: false, label: 'collapsable'
+  id: 'collapsable',align: 'left', disablePadding: true, label: ''
 }, {
-  id: 'botName', align: 'left', disablePadding: false, label: 'Bot'
+  id: 'botName', align: 'left', disablePadding: true, label: 'Bot'
 }, {
   id: 'strat_type', align: 'left', disablePadding: true, label: 'Strategy Type'
 }, {
-  id: 'timeframes', align: 'right', disablePadding: false, label: 'Timeframes'
+  id: 'timeframes', align: 'right', disablePadding: true, label: 'Timeframes'
 },];
 
 const infoForTradeHistory = {};
@@ -81,7 +81,8 @@ function QuantsBotsTableHead({order, orderBy}) {
         {headCells.map((headCell) => (<TableCell
             key={headCell.id}
             align={headCell.align}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            padding={"checkbox"}
+            // padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             {headCell.label}
@@ -143,8 +144,6 @@ export default function QuantsBots(props) {
     return botsData(name, props.quant.bots[name].strat_type, props.quant.bots[name].timeframes, props.quant.bots[name].trading_pairs, props.quant.bots[name].about_bot)
   })
 
-  console.log("ID OF QUANT: ", props.quant.id);
-
   const addTF = tf => {
     infoForTradeHistory["tf"] = tf;
     props.infoForTradeHistory(infoForTradeHistory);
@@ -178,7 +177,8 @@ export default function QuantsBots(props) {
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-  return (<Box>
+  return (
+    <Box>
       {currentQuantName === 'default' ? (
         <Box sx={{ alignItems: 'center', backgroundColor: theme.palette.grey.A200, display: 'flex', justifyContent: 'center', minHeight: 400}}>
           <Typography variant={"h5"}>Select a quant to get started!</Typography>
@@ -209,7 +209,8 @@ export default function QuantsBots(props) {
               {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
                 const isItemSelected = isSelected(row.botName);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                return (<Fragment key={row.botName}>
+                return (
+                  <Fragment key={row.botName}>
                     <TableRow
                       hover
                       role="checkbox"
@@ -235,7 +236,10 @@ export default function QuantsBots(props) {
                       <TableCell align="right">{row.timeframes}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell colSpan={5} sx={{paddingTop: 0, paddingBottom: 0, border: 0}}>
+                      <TableCell
+                        colSpan={4}
+                        style={{whiteSpace: "normal", wordWrap: "break-word"}}
+                        sx={{paddingTop: 0, paddingBottom: 0, border: 0}}>
                         <Collapse in={open === index} timeout={"auto"} unmountOnExit>
                           <Stack direction={"row"} spacing={1} alignItems={"center"} sx={{paddingTop: 3}}>
                             <Typography sx={{paddingRight: 3}}>Timeframes:</Typography>
@@ -261,11 +265,26 @@ export default function QuantsBots(props) {
                                 >{tp}</Button>);
                             })}
                           </Stack>
-                          <Stack direction={"row"} sx={{paddingTop: 3}}>
-                            <Typography sx={{paddingRight: 3}}>About Bot: </Typography>
-                            <Typography>{row.about_bot}</Typography>
-                          </Stack>
-
+                          <Typography variant={"h4"} sx={{pt: 3, paddingRight: 3}}>About Bot: </Typography>
+                          {/*<Stack direction={"row"} sx={{paddingTop: 3}}>*/}
+                          {/*  <Typography sx={{paddingRight: 3}}>About Bot: </Typography>*/}
+                          <Box sx={{pl: 1}}>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Idea</Typography>
+                            <Typography>{row.about_bot.idea}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Long Entry</Typography>
+                            <Typography>{row.about_bot.long_entry}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Long Take Profit</Typography>
+                            <Typography>{row.about_bot.long_take_profit}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Long Stop Loss</Typography>
+                            <Typography>{row.about_bot.long_stop_loss}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Short Entry</Typography>
+                            <Typography>{row.about_bot.short_entry}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Short Take Profit</Typography>
+                            <Typography>{row.about_bot.short_take_profit}</Typography>
+                            <Typography sx={{pt:1, textDecoration: 'underline'}}>Short Stop Loss</Typography>
+                            <Typography>{row.about_bot.short_stop_loss}</Typography>
+                          </Box>
+                          {/*</Stack>*/}
                         </Collapse>
                       </TableCell>
                     </TableRow>

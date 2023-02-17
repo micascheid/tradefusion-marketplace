@@ -68,12 +68,29 @@ for (let i = 0; i < 10; i++) {
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 const DashboardDefault = () => {
   const defaultQuant = {
-    id: "default", bots:
+    id: "default",
+    about:
+        {"display_name":"Default"},
+    bots:
       {
         csp:
-          {strat_type: "mean reversion", timeframes: ['5m', '30m', '1h'], trading_pairs: ['BTCUSDT, ETHUSD']}
+          {
+            strat_type: "mean reversion",
+            timeframes: ['5m', '30m', '1h'],
+            trading_pairs: ['BTCUSDT, ETHUSD'],
+            about_bot: {idea: "The CSP version 2 bot is based on the PPVI (Pure Pupil Volatility Indicator) "/
+              "which tries to exploit the most recent volatility by making a position"/
+              "opposite of the price movement. PPVI consists of an upper and lower line to form a band",
+              long_entry: "When price closes below the lower line",
+              long_take_profit: "When profit is or exceeds 2% OR price closes above the upper line",
+              long_stop_loss: "When loss is or exceeds 1%",
+              short_entry: "When price closes above the upper line",
+              short_take_profit: "When profit is or exceeds 2% OR price closes below the lower line",
+              short_stop_loss: "When loss is or exceeds 1%",
+            }}
       }
   };
+
   const [value, setValue] = useState('today');
   const [slot, setSlot] = useState('week');
   const [infoForTH, setInfoForTH] = useState([]);
@@ -89,6 +106,7 @@ const DashboardDefault = () => {
   }
 
   const onSelectedQuant = (selectedQuant) => {
+    console.log("CURRENT QUANT: ", selectedQuant);
     setQuant(selectedQuant);
   }
 
@@ -134,7 +152,7 @@ const DashboardDefault = () => {
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <Stack>
           <Grid item>
-            <Typography variant="h5">{currentQuant.id}</Typography>
+            <Typography variant="h5">{currentQuant.about.display_name}</Typography>
             <Box/>
           </Grid>
           <Grid item/>
