@@ -6,3 +6,6 @@ firestoreconfig
 
 # Firebase config
 src/FirebaseConfig.js
+
+#Server Build Package
+build
