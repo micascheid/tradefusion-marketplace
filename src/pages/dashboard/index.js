@@ -22,7 +22,7 @@ import AvailableQuants from "./AvailableQuants";
 import QuantsBots from "./QuantsBots";
 import LiveTrade from "./LiveTrade";
 import {isEmptyArray} from "formik";
-import {useTheme} from "@mui/material/styles";
+import {createTheme, useTheme} from "@mui/material/styles";
 
 // avatar style
 const avatarSX = {
@@ -96,17 +96,11 @@ const DashboardDefault = () => {
   const [infoForTH, setInfoForTH] = useState([]);
   const [infoForLiveTrade, setInfoForLiveTrade] = useState();
   const [currentQuant, setQuant] = useState(defaultQuant);
-  const [fetchedQuants, setFetchedQuants] = useState();
+  // const [fetchedQuants, setFetchedQuants] = useState();
   const [botInfo, setBotInfo] = useState({"bot":"", "tf":"", "pair":""});
   const theme = useTheme();
 
-  const fetchQuants = async () => {
-    const querySnapshot = await getDocs(collection(db, "quant_names"));
-    return querySnapshot;
-  }
-
   const onSelectedQuant = (selectedQuant) => {
-    console.log("CURRENT QUANT: ", selectedQuant);
     setQuant(selectedQuant);
   }
 
@@ -116,13 +110,11 @@ const DashboardDefault = () => {
     const pair = dict["pair"];
     const queryPath = `trade_history/${bn}/${tf}${pair}`;
     if (tf !== "" && pair !== "" && bn !== "") {
-      console.log("LETS SET SOME STUFF!", dict);
       await getDocs(collection(db, queryPath))
         .then((querySnapshot) => {
           const rowData = querySnapshot.docs.map((doc, index) => (
             tradeData(doc.data().time_in.split('+')[0], bn, doc.data().position, doc.data().pnl)
           ));
-          console.log("ROW DATA: ", rowData);
           setInfoForTH(rowData);
         })
     }
@@ -133,13 +125,11 @@ const DashboardDefault = () => {
     const tf = dict["tf"];
     const pair = dict["pair"];
     const entry_name = tf + pair;
-    console.log(entry_name);
     const queryPath = `entry/${bn}`;
     if (tf !== "" && pair !== "" && bn !== "") {
       const docRef = doc(db, queryPath);
       const querySnapshot = await getDoc(docRef);
       const entryNameInfo = querySnapshot.data()[entry_name];
-      console.log("LIVE TRADE: ", querySnapshot.data()[entry_name]);
       setInfoForLiveTrade(entryNameInfo);
       setBotInfo({"bot": bn, "tf": tf, "pair": pair})
     }
@@ -165,8 +155,8 @@ const DashboardDefault = () => {
       {/* Right side of the dashboard */}
       <Grid item xs={8}>
         {/* Populates the first rows of cards containing Quants available */}
-        <AvailableQuants onSelectedQuant={onSelectedQuant} quants={fetchedQuants}/>
-        <Box sx={{pt: 4}}/>
+        <AvailableQuants onSelectedQuant={onSelectedQuant}/>
+        <Box sx={{ pt: 4}}/>
 
         {/*Live trade box */}
         <Grid container spacing={2}>
@@ -176,7 +166,7 @@ const DashboardDefault = () => {
                 <Typography variant={"h4"} sx={{pb: 3}}>Bot in Real-Time</Typography>
                 <Box sx={{
                   alignItems: 'center',
-                  backgroundColor: theme.palette.grey.A200,
+                  // backgroundColor: theme.palette.primary.main,
                   display: 'flex',
                   justifyContent: 'center',
                   minHeight: 400

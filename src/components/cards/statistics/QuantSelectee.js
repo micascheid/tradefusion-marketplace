@@ -5,59 +5,68 @@ import {Avatar, Box, Card, Chip, Grid, Stack, Typography} from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import { alpha, styled } from '@mui/material/styles';
+import {alpha, styled, useTheme} from '@mui/material/styles';
 
 // assets
 import Iconify from '../../../components/iconify';
 import theme from "../../../themes/theme";
+import {Fragment} from "react";
 
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const TOTALBOTS = "Total Bots:";
 
-const StyledIcon = styled('div')(({ theme }) => ({
-    margin: 'auto',
-    display: 'flex',
-    borderRadius: '50%',
-    alignItems: 'center',
-    width: theme.spacing(8),
-    height: theme.spacing(8),
-    justifyContent: 'center',
-    marginBottom: theme.spacing(3),
+const StyledIcon = styled('div')(({theme}) => ({
+  margin: 'auto',
+  display: 'flex',
+  borderRadius: '50%',
+  alignItems: 'center',
+  width: theme.spacing(8),
+  height: theme.spacing(8),
+  justifyContent: 'center',
+  marginBottom: theme.spacing(3),
 }));
-const QuantSelectee = ({ title, icon, sx, color = 'primary', quantName, totalBots }) => (
+
+const QuantSelectee = ({title, icon, sx, color = '', quantName, totalBots, loaded}) => (
   <MainCard
     sx={{
         py: 0,
         boxShadow: 0,
         textAlign: 'center',
-        color: (theme) => theme.palette[color].darker,
-        bgcolor: (theme) => theme.palette[color].lighter,
+        bgcolor: color !== ''?(theme) => theme.palette[color].lighter : '#ffffff',
+        minHeight: 190
     }}
   >
-      <Typography variant="h3">{quantName}</Typography>
-      <Avatar alt={quantName} src={icon} sx={{margin:"auto", width: 60, height: 60}}></Avatar>
+    {!loaded &&
+      <Typography variant={"h4"}>Loading...</Typography>
+    }
+    {loaded &&
+      <Fragment>
+        <Typography variant="h3">{quantName}</Typography>
+        <Avatar alt={quantName} src={icon} sx={{margin: "auto", width: 60, height: 60}}></Avatar>
 
-      <Typography variant="h3">{totalBots}</Typography>
+        <Typography variant="h3">{totalBots}</Typography>
 
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+        <Typography variant="subtitle2" sx={{opacity: 0.72}}>
           {title}
-      </Typography>
+        </Typography>
+      </Fragment>
+    }
   </MainCard>
 );
 
 QuantSelectee.propTypes = {
-    color: PropTypes.string,
-    quantName: PropTypes.string,
-    totalBots: PropTypes.string,
-    percentage: PropTypes.number,
-    isLoss: PropTypes.bool,
-    extra: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
+  color: PropTypes.string,
+  quantName: PropTypes.string,
+  totalBots: PropTypes.string,
+  percentage: PropTypes.number,
+  isLoss: PropTypes.bool,
+  extra: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
 };
 
 QuantSelectee.defaultProps = {
-    color: 'primary'
+  color: 'primary'
 };
 
 export default QuantSelectee;

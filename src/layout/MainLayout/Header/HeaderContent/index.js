@@ -15,23 +15,25 @@ const HeaderContent = () => {
 
     return (
         <>
-            {!matchesXs && <Search />}
-            {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
+            {/*{!matchesXs && <Search />}*/}
+            {/*{matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}*/}
 
-            <IconButton
-                component={Link}
-                href="https://github.com/codedthemes/mantis-free-react-admin-template"
-                target="_blank"
-                disableRipple
-                color="secondary"
-                title="Download Free Version"
-                sx={{ color: 'text.primary', bgcolor: 'grey.100' }}
-            >
-                <GithubOutlined />
-            </IconButton>
+            {/*<IconButton*/}
+            {/*    component={Link}*/}
+            {/*    href="https://github.com/codedthemes/mantis-free-react-admin-template"*/}
+            {/*    target="_blank"*/}
+            {/*    disableRipple*/}
+            {/*    color="secondary"*/}
+            {/*    title="Download Free Version"*/}
+            {/*    sx={{ color: 'text.primary', bgcolor: 'grey.100' }}*/}
+            {/*>*/}
+            {/*    <GithubOutlined />*/}
+            {/*</IconButton>*/}
 
-            <Notification />
-            {!matchesXs && <Profile />}
+            {/*<Notification />*/}
+            {!matchesXs &&
+              <Box sx={{ width: '100%', ml: 1 }} />}
+              <Profile />
             {matchesXs && <MobileSection />}
         </>
     );
