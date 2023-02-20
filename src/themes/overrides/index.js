@@ -24,7 +24,6 @@ export default function ComponentsOverrides(theme) {
     return merge(
         Button(theme),
         Badge(theme),
-        CardContent(),
         Checkbox(theme),
         Chip(theme),
         IconButton(theme),

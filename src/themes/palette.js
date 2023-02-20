@@ -6,8 +6,20 @@ import { presetPalettes } from '@ant-design/colors';
 
 // project import
 import ThemeOption from './theme';
+import { ThemeOptions } from '@mui/material/styles';
+import { deepmerge } from '@mui/utils'
 
 // ==============================|| DEFAULT THEME - PALETTE  ||============================== //
+
+/*
+Logo Hex's
+blue/purple = 2F2E64
+    light: 585783
+    dark: 202046
+orange = EF985D
+red = DB676A
+grey = BCC3C9
+*/
 
 const Palette = (mode) => {
     const colors = presetPalettes;
@@ -34,6 +46,7 @@ const Palette = (mode) => {
 
     return createTheme({
         palette: {
+            buttonlight: paletteColor.grey[300],
             mode,
             common: {
                 black: '#000',
@@ -50,7 +63,7 @@ const Palette = (mode) => {
             },
             divider: paletteColor.grey[200],
             background: {
-                paper: paletteColor.grey[0],
+                paper: paletteColor.grey[100],
                 default: paletteColor.grey.A50
             }
         }
