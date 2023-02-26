@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -66,21 +66,6 @@ const Profile = () => {
     const [value, setValue] = useState(0);
 
     const auth = getAuth();
-    const user = auth.currentUser;
-    // console.log(user.email);
-    // onAuthStateChanged(auth, (user) => {
-    //    if (user){
-    //        console.log(user.email);
-    //        setProfileName(user.email);
-    //    } else {
-    //        console.log("No user signed in");
-    //    }
-    // });
-
-    // if (user !== null) {
-    //     setProfileName(user.email);
-    // }
-
 
 
     const anchorRef = useRef(null);
@@ -115,14 +100,17 @@ const Profile = () => {
 
     const iconBackColorOpen = 'grey.300';
     let name = '';
-    // onAuthStateChanged(auth, (user) => {
-    //     if (user){
-    //       console.log("MAKE IT TO USER?");
-    //         setProfileName(user.uid);
-    //     } else {
-    //         console.log("not logged in");
-    //     }
-    // });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user){
+                const { test } = user;
+                console.log(test);
+                setProfileName(user.displayName);
+            } else {
+            }
+        });
+    }, []);
+
 
     return (
         <Box sx={{ alignItems: 'right', flexShrink: 0, ml: 0.75 }}>

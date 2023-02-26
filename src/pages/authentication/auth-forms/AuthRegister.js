@@ -31,7 +31,7 @@ import {strengthColor, strengthIndicator} from 'utils/password-strength';
 import {EyeOutlined, EyeInvisibleOutlined} from '@ant-design/icons';
 
 // firebase auth
-import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import {initializeApp} from "firebase/app";
 import {db, auth} from "../../../FirebaseConfig";
 
@@ -80,6 +80,9 @@ const AuthRegister = () => {
                     console.log("submitting new user...");
                     createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then((a) => {
+                            updateProfile(auth.currentUser, {
+                                displayName: values.displayname, photoURL: ''
+                            }).then(() => {console.log("updated");}).catch((error)=> {console.log("couldn't update");})
                             navigate('/dashboard/default');
                         })
                         .catch((error) => {

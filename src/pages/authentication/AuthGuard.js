@@ -1,13 +1,25 @@
-import React from 'react';
-import { Outlet, Navigate} from "react-router-dom";
-import { getAuth } from 'firebase/auth';
+import React, {Fragment, useState} from 'react';
+import {Outlet, Navigate, useNavigate} from "react-router-dom";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
-const AuthGuard = ({children}) => {
+const AuthGuard = (props) => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const auth = getAuth();
-  const user = auth.currentUser;
+  onAuthStateChanged(auth, (user) => {
+    if (user){
+      setIsLoggedIn(true);
+    } else {
+      navigate('/login');
+    }
+  });
+
   return (
-    user ? children : <Navigate to={'/login'}/>
+    <Fragment>
+      {isLoggedIn ? props.children : null}
+    </Fragment>
   );
 };
 

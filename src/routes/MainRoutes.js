@@ -5,6 +5,7 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import Support from "../pages/extra-pages/Support";
 import AuthGuard from "../pages/authentication/AuthGuard";
+import {getAuth} from "firebase/auth";
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -17,11 +18,13 @@ const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
+const usertest = getAuth().currentUser;
+console.log("Main routing: ", usertest);
 
 const MainRoutes = {
   path: '/',
   element: (
-    <AuthGuard>
+    <AuthGuard user={usertest}>
       <MainLayout/>
     </AuthGuard>
   ),
