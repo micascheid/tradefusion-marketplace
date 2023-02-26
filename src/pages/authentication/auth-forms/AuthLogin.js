@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
 
 // material-ui
 import {
@@ -20,22 +20,23 @@ import {
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 
 // project import
 import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import {EyeOutlined, EyeInvisibleOutlined} from '@ant-design/icons';
 
 //firebase import
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { auth } from '../../../FirebaseConfig';
+import {getAuth, signInWithEmailAndPassword, onAuthStateChanged} from "firebase/auth";
+import {auth} from '../../../FirebaseConfig';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
+    const navigate = useNavigate();
     const [checked, setChecked] = React.useState(false);
 
     const [showPassword, setShowPassword] = React.useState(false);
@@ -51,7 +52,7 @@ const AuthLogin = () => {
         <>
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
+                    email: 'support@tradefusion.io',
                     password: '123456',
                     submit: null
                 }}
@@ -59,29 +60,25 @@ const AuthLogin = () => {
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
-                onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        setStatus({ success: false });
-                        setSubmitting(false);
-                        console.log("logging in...");
-                        signInWithEmailAndPassword(auth, values.email, values.password)
-                          .then((userCredential) => {
-                              const user = userCredential.user;
-                          })
-                          .catch((error) => {
-                              const errorCode = error.code;
-                              const errorMessage = error.message;
-                              console.log("error login message: ", errorMessage);
-                          })
-                    } catch (err) {
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
-                        setSubmitting(false);
-                        console.log("error login message: ", err.message);
-                    }
+                onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
+                    setStatus({success: false});
+                    setSubmitting(false);
+                    console.log("Attempting Login...");
+                    signInWithEmailAndPassword(auth, values.email, values.password)
+                        .then(() => {
+                            navigate('/dashboard/default');
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.log("error login message: ", errorMessage);
+                            setStatus({success: false});
+                            setErrors({submit: error.message});
+                            setSubmitting(false);
+                        })
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
@@ -126,7 +123,7 @@ const AuthLogin = () => {
                                                     edge="end"
                                                     size="large"
                                                 >
-                                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                                    {showPassword ? <EyeOutlined/> : <EyeInvisibleOutlined/>}
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -140,7 +137,7 @@ const AuthLogin = () => {
                                 </Stack>
                             </Grid>
 
-                            <Grid item xs={12} sx={{ mt: -1 }}>
+                            <Grid item xs={12} sx={{mt: -1}}>
                                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                                     <FormControlLabel
                                         control={
@@ -179,14 +176,14 @@ const AuthLogin = () => {
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Divider>
-                                    <Typography variant="caption"> Login with</Typography>
-                                </Divider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FirebaseSocial />
-                            </Grid>
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <Divider>*/}
+                            {/*        <Typography variant="caption"> Login with</Typography>*/}
+                            {/*    </Divider>*/}
+                            {/*</Grid>*/}
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <FirebaseSocial />*/}
+                            {/*</Grid>*/}
                         </Grid>
                     </form>
                 )}

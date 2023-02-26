@@ -21,7 +21,7 @@ const pages = {
             url: '/login',
             icon: icons.LoginOutlined,
             target: true,
-            disabled: true
+            disabled: false
         },
         {
             id: 'register1',
@@ -30,7 +30,7 @@ const pages = {
             url: '/register',
             icon: icons.ProfileOutlined,
             target: true,
-            disabled: true
+            disabled: false
         }
     ]
 };
