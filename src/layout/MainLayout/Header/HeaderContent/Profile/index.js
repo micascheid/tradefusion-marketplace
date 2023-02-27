@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -33,6 +33,7 @@ import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons
 import {getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import { auth } from '../../../../../FirebaseConfig';
 import {DisabledByDefault} from "@mui/icons-material";
+import {useNavigate} from "react-router-dom";
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -59,17 +60,13 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
+    const navigate = useNavigate();
     const theme = useTheme();
-    const [profileName, setProfileName] = useState('Mica');
-    const handleLogout = async () => {
-        // logout
-        signOut(auth).then(() => {
-            console.log("User signed out");
-        }).catch((error) => {
-            console.log("unable to sign user out");
-        })
+    const [profileName, setProfileName] = useState('');
+    const [value, setValue] = useState(0);
 
-    };
+    const auth = getAuth();
+
 
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
@@ -84,22 +81,36 @@ const Profile = () => {
         setOpen(false);
     };
 
-    const [value, setValue] = useState(0);
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    const handleLogout = async () => {
+        // logout
+        signOut(auth).then(() => {
+            console.log("User signed out");
+            navigate('/login');
+        }).catch((error) => {
+            console.log("unable to sign user out");
+        })
+
+    };
+
     const iconBackColorOpen = 'grey.300';
     let name = '';
-    // onAuthStateChanged(auth, (user) => {
-    //     if (user){
-    //       console.log("MAKE IT TO USER?");
-    //         setProfileName(user.uid);
-    //     } else {
-    //         console.log("not logged in");
-    //     }
-    // });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user){
+                const { test } = user;
+                console.log(test);
+                setProfileName(user.displayName);
+            } else {
+            }
+        });
+    }, []);
+
 
     return (
         <Box sx={{ alignItems: 'right', flexShrink: 0, ml: 0.75 }}>
@@ -121,110 +132,110 @@ const Profile = () => {
                     <Typography variant="subtitle1">{profileName}</Typography>
                 </Stack>
             </ButtonBase>
-            {/*<Popper*/}
-            {/*    placement="bottom-end"*/}
-            {/*    open={open}*/}
-            {/*    anchorEl={anchorRef.current}*/}
-            {/*    role={undefined}*/}
-            {/*    transition*/}
-            {/*    disablePortal*/}
-            {/*    popperOptions={{*/}
-            {/*        modifiers: [*/}
-            {/*            {*/}
-            {/*                name: 'offset',*/}
-            {/*                options: {*/}
-            {/*                    offset: [0, 9]*/}
-            {/*                }*/}
-            {/*            }*/}
-            {/*        ]*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    {({ TransitionProps }) => (*/}
-            {/*        <Transitions type="fade" in={open} {...TransitionProps}>*/}
-            {/*            {open && (*/}
-            {/*                <Paper*/}
-            {/*                    sx={{*/}
-            {/*                        boxShadow: theme.customShadows.z1,*/}
-            {/*                        width: 290,*/}
-            {/*                        minWidth: 240,*/}
-            {/*                        maxWidth: 290,*/}
-            {/*                        [theme.breakpoints.down('md')]: {*/}
-            {/*                            maxWidth: 250*/}
-            {/*                        }*/}
-            {/*                    }}*/}
-            {/*                >*/}
-            {/*                    <ClickAwayListener onClickAway={handleClose}>*/}
-            {/*                        <MainCard elevation={0} border={false} content={false}>*/}
-            {/*                            <CardContent sx={{ px: 2.5, pt: 3 }}>*/}
-            {/*                                <Grid container justifyContent="space-between" alignItems="center">*/}
-            {/*                                    <Grid item>*/}
-            {/*                                        <Stack direction="row" spacing={1.25} alignItems="center">*/}
-            {/*                                            <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />*/}
-            {/*                                            <Stack>*/}
-            {/*                                                <Typography variant="h6">{profileName}</Typography>*/}
-            {/*                                                <Typography variant="body2" color="textSecondary">*/}
-            {/*                                                    UI/UX Designer*/}
-            {/*                                                </Typography>*/}
-            {/*                                            </Stack>*/}
-            {/*                                        </Stack>*/}
-            {/*                                    </Grid>*/}
-            {/*                                    <Grid item>*/}
-            {/*                                        <IconButton size="large" color="secondary" onClick={handleLogout}>*/}
-            {/*                                            <LogoutOutlined />*/}
-            {/*                                        </IconButton>*/}
-            {/*                                    </Grid>*/}
-            {/*                                </Grid>*/}
-            {/*                            </CardContent>*/}
-            {/*                            {open && (*/}
-            {/*                                <>*/}
-            {/*                                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>*/}
-            {/*                                        <Tabs*/}
-            {/*                                            variant="fullWidth"*/}
-            {/*                                            value={value}*/}
-            {/*                                            onChange={handleChange}*/}
-            {/*                                            aria-label="profile tabs"*/}
-            {/*                                        >*/}
-            {/*                                            <Tab*/}
-            {/*                                                sx={{*/}
-            {/*                                                    display: 'flex',*/}
-            {/*                                                    flexDirection: 'row',*/}
-            {/*                                                    justifyContent: 'center',*/}
-            {/*                                                    alignItems: 'center',*/}
-            {/*                                                    textTransform: 'capitalize'*/}
-            {/*                                                }}*/}
-            {/*                                                icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}*/}
-            {/*                                                label="Profile"*/}
-            {/*                                                {...a11yProps(0)}*/}
-            {/*                                            />*/}
-            {/*                                            <Tab*/}
-            {/*                                                sx={{*/}
-            {/*                                                    display: 'flex',*/}
-            {/*                                                    flexDirection: 'row',*/}
-            {/*                                                    justifyContent: 'center',*/}
-            {/*                                                    alignItems: 'center',*/}
-            {/*                                                    textTransform: 'capitalize'*/}
-            {/*                                                }}*/}
-            {/*                                                icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}*/}
-            {/*                                                label="Setting"*/}
-            {/*                                                {...a11yProps(1)}*/}
-            {/*                                            />*/}
-            {/*                                        </Tabs>*/}
-            {/*                                    </Box>*/}
-            {/*                                    <TabPanel value={value} index={0} dir={theme.direction}>*/}
-            {/*                                        <ProfileTab handleLogout={handleLogout} />*/}
-            {/*                                    </TabPanel>*/}
-            {/*                                    <TabPanel value={value} index={1} dir={theme.direction}>*/}
-            {/*                                        <SettingTab />*/}
-            {/*                                    </TabPanel>*/}
-            {/*                                </>*/}
-            {/*                            )}*/}
-            {/*                        </MainCard>*/}
-            {/*                    </ClickAwayListener>*/}
-            {/*                </Paper>*/}
-            {/*            )}*/}
-            {/*        </Transitions>*/}
-            {/*    )}*/}
-            {/*</Popper>*/}
+            <Popper
+                placement="bottom-end"
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+                popperOptions={{
+                    modifiers: [
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 9]
+                            }
+                        }
+                    ]
+                }}
+            >
+                {({ TransitionProps }) => (
+                    <Transitions type="fade" in={open} {...TransitionProps}>
+                        {open && (
+                            <Paper
+                                sx={{
+                                    boxShadow: theme.customShadows.z1,
+                                    width: 290,
+                                    minWidth: 240,
+                                    maxWidth: 290,
+                                    [theme.breakpoints.down('md')]: {
+                                        maxWidth: 250
+                                    }
+                                }}
+                            >
+                                <ClickAwayListener onClickAway={handleClose}>
+                                    <MainCard elevation={0} border={false} content={false}>
+                                        <CardContent sx={{ px: 2.5, pt: 3 }}>
+                                            <Grid container justifyContent="space-between" alignItems="center">
+                                                <Grid item>
+                                                    <Stack direction="row" spacing={1.25} alignItems="center">
+                                                        <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                                                        <Stack>
+                                                            <Typography variant="h6">{profileName}</Typography>
+                                                            <Typography variant="body2" color="textSecondary">
+                                                                UI/UX Designer
+                                                            </Typography>
+                                                        </Stack>
+                                                    </Stack>
+                                                </Grid>
+                                                <Grid item>
+                                                    <IconButton size="large" color="secondary" onClick={handleLogout}>
+                                                        <LogoutOutlined />
+                                                    </IconButton>
+                                                </Grid>
+                                            </Grid>
+                                        </CardContent>
+                                        {open && (
+                                            <>
+                                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                    <Tabs
+                                                        variant="fullWidth"
+                                                        value={value}
+                                                        onChange={handleChange}
+                                                        aria-label="profile tabs"
+                                                    >
+                                                        <Tab
+                                                            sx={{
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                textTransform: 'capitalize'
+                                                            }}
+                                                            icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
+                                                            label="Profile"
+                                                            {...a11yProps(0)}
+                                                        />
+                                                        {/*<Tab*/}
+                                                        {/*    sx={{*/}
+                                                        {/*        display: 'flex',*/}
+                                                        {/*        flexDirection: 'row',*/}
+                                                        {/*        justifyContent: 'center',*/}
+                                                        {/*        alignItems: 'center',*/}
+                                                        {/*        textTransform: 'capitalize'*/}
+                                                        {/*    }}*/}
+                                                        {/*    icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}*/}
+                                                        {/*    label="Setting"*/}
+                                                        {/*    {...a11yProps(1)}*/}
+                                                        {/*/>*/}
+                                                    </Tabs>
+                                                </Box>
+                                                <TabPanel value={value} index={0} dir={theme.direction}>
+                                                    <ProfileTab handleLogout={handleLogout} />
+                                                </TabPanel>
+                                                <TabPanel value={value} index={1} dir={theme.direction}>
+                                                    <SettingTab />
+                                                </TabPanel>
+                                            </>
+                                        )}
+                                    </MainCard>
+                                </ClickAwayListener>
+                            </Paper>
+                        )}
+                    </Transitions>
+                )}
+            </Popper>
         </Box>
     );
 };

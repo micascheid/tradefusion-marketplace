@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
 
 // material-ui
 import {
@@ -20,31 +20,35 @@ import {
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 
 // project import
 import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import {strengthColor, strengthIndicator} from 'utils/password-strength';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import {EyeOutlined, EyeInvisibleOutlined} from '@ant-design/icons';
 
 // firebase auth
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import {initializeApp} from "firebase/app";
 import {db, auth} from "../../../FirebaseConfig";
 
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const AuthRegister = () => {
+    const navigate = useNavigate();
     const [level, setLevel] = useState();
     const [showPassword, setShowPassword] = useState(false);
+    const [isRegeristering, setIsRegistering] = useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
     const handleMouseDownPassword = (event) => {
+
+        console.log("Submitting new user");
         event.preventDefault();
     };
 
@@ -61,104 +65,62 @@ const AuthRegister = () => {
         <>
             <Formik
                 initialValues={{
-                    firstname: '',
-                    lastname: '',
+                    displayname: '',
                     email: '',
                     company: '',
                     password: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    firstname: Yup.string().max(255).required('First Name is required'),
-                    lastname: Yup.string().max(255).required('Last Name is required'),
+                    displayname: Yup.string().max(255).required('First Name is required'),
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
-                onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        setStatus({ success: false });
-                        setSubmitting(false);
-                        console.log("submitting new user...");
-                        createUserWithEmailAndPassword(auth, values.email, values.password)
-                          .then((userCredential) => {
-                              const user = userCredential.user;
-                          })
-                          .catch((error) => {
-                              const errorCode = error.code;
-                              const errorMessage = error.message;
-                          })
-                    } catch (err) {
-                        console.error(err);
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
-                        setSubmitting(false);
-
-                    }
-                }}
+                onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
+                    setStatus({success: false});
+                    setSubmitting(false);
+                    setIsRegistering(true);
+                    console.log("submitting new user...");
+                    createUserWithEmailAndPassword(auth, values.email, values.password)
+                        .then(() => {
+                            updateProfile(auth.currentUser, {
+                                displayName: values.displayname, photoURL: ''
+                            }).then(() => {console.log("updated");}).catch((error)=> {console.log("couldn't update");})
+                            navigate('/dashboard/default');
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error(errorCode);
+                            console.error(errorMessage);
+                            setStatus({success: false});
+                            setErrors({submit: error.message});
+                            setSubmitting(false);
+                            setIsRegistering(false);
+                        })
+                }
+                }
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
+                                    <InputLabel htmlFor="displayname-signup">Display Name*</InputLabel>
                                     <OutlinedInput
-                                        id="firstname-login"
-                                        type="firstname"
-                                        value={values.firstname}
-                                        name="firstname"
+                                        id="displayname-login"
+                                        type="displayname"
+                                        value={values.displayname}
+                                        name="displayname"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         placeholder="John"
                                         fullWidth
-                                        error={Boolean(touched.firstname && errors.firstname)}
+                                        error={Boolean(touched.displayname && errors.displayname)}
                                     />
-                                    {touched.firstname && errors.firstname && (
-                                        <FormHelperText error id="helper-text-firstname-signup">
-                                            {errors.firstname}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.lastname && errors.lastname)}
-                                        id="lastname-signup"
-                                        type="lastname"
-                                        value={values.lastname}
-                                        name="lastname"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="Doe"
-                                        inputProps={{}}
-                                    />
-                                    {touched.lastname && errors.lastname && (
-                                        <FormHelperText error id="helper-text-lastname-signup">
-                                            {errors.lastname}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="company-signup">Company</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.company && errors.company)}
-                                        id="company-signup"
-                                        value={values.company}
-                                        name="company"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="Demo Inc."
-                                        inputProps={{}}
-                                    />
-                                    {touched.company && errors.company && (
-                                        <FormHelperText error id="helper-text-company-signup">
-                                            {errors.company}
+                                    {touched.displayname && errors.displayname && (
+                                        <FormHelperText error id="helper-text-displayname-signup">
+                                            {errors.displayname}
                                         </FormHelperText>
                                     )}
                                 </Stack>
@@ -209,7 +171,7 @@ const AuthRegister = () => {
                                                     edge="end"
                                                     size="large"
                                                 >
-                                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                                    {showPassword ? <EyeOutlined/> : <EyeInvisibleOutlined/>}
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -222,10 +184,15 @@ const AuthRegister = () => {
                                         </FormHelperText>
                                     )}
                                 </Stack>
-                                <FormControl fullWidth sx={{ mt: 2 }}>
+                                <FormControl fullWidth sx={{mt: 2}}>
                                     <Grid container spacing={2} alignItems="center">
                                         <Grid item>
-                                            <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
+                                            <Box sx={{
+                                                bgcolor: level?.color,
+                                                width: 85,
+                                                height: 8,
+                                                borderRadius: '7px'
+                                            }}/>
                                         </Grid>
                                         <Grid item>
                                             <Typography variant="subtitle1" fontSize="0.75rem">
@@ -256,25 +223,26 @@ const AuthRegister = () => {
                                 <AnimateButton>
                                     <Button
                                         disableElevation
-                                        disabled={isSubmitting}
+                                        disabled={isRegeristering || Boolean(!touched.email)}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Create Account
+                                        {isRegeristering ? 'Create Account' : 'Creating Account'}
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Divider>
-                                    <Typography variant="caption">Sign up with</Typography>
-                                </Divider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FirebaseSocial />
-                            </Grid>
+                            {/* TODO after email auth is handled */}
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <Divider>*/}
+                            {/*        <Typography variant="caption">Sign up with</Typography>*/}
+                            {/*    </Divider>*/}
+                            {/*</Grid>*/}
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <FirebaseSocial />*/}
+                            {/*</Grid>*/}
                         </Grid>
                     </form>
                 )}

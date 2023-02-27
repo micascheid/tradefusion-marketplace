@@ -11,7 +11,7 @@ const icons = {
 
 const pages = {
     id: 'authentication',
-    title: 'Authentication (Coming Soon)',
+    title: 'Authentication',
     type: 'group',
     children: [
         {
@@ -21,7 +21,7 @@ const pages = {
             url: '/login',
             icon: icons.LoginOutlined,
             target: true,
-            disabled: true
+            disabled: false
         },
         {
             id: 'register1',
@@ -30,7 +30,7 @@ const pages = {
             url: '/register',
             icon: icons.ProfileOutlined,
             target: true,
-            disabled: true
+            disabled: false
         }
     ]
 };

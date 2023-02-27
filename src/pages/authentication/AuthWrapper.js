@@ -15,7 +15,7 @@ import AuthBackground from 'assets/images/auth/AuthBackground';
 
 const AuthWrapper = ({ children }) => (
     <Box sx={{ minHeight: '100vh' }}>
-        <AuthBackground />
+        {/*<AuthBackground />*/}
         <Grid
             container
             direction="column"
