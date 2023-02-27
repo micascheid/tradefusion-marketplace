@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 
 // material-ui
@@ -38,6 +38,7 @@ import {auth} from '../../../FirebaseConfig';
 const AuthLogin = () => {
     const navigate = useNavigate();
     const [checked, setChecked] = React.useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => {
@@ -62,11 +63,13 @@ const AuthLogin = () => {
                 })}
                 onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     setStatus({success: false});
-                    setSubmitting(false);
                     console.log("Attempting Login...");
+                    setIsLoggingIn(true);
                     signInWithEmailAndPassword(auth, values.email, values.password)
                         .then(() => {
-                            navigate('/dashboard/default');
+
+                            setTimeout(() => {navigate('/dashboard/default')},3000);
+
                         })
                         .catch((error) => {
                             const errorCode = error.code;
@@ -75,6 +78,7 @@ const AuthLogin = () => {
                             setStatus({success: false});
                             setErrors({submit: error.message});
                             setSubmitting(false);
+                            setIsLoggingIn(false);
                         })
                 }}
             >
@@ -138,23 +142,23 @@ const AuthLogin = () => {
                             </Grid>
 
                             <Grid item xs={12} sx={{mt: -1}}>
-                                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={checked}
-                                                onChange={(event) => setChecked(event.target.checked)}
-                                                name="checked"
-                                                color="primary"
-                                                size="small"
-                                            />
-                                        }
-                                        label={<Typography variant="h6">Keep me signed in</Typography>}
-                                    />
+                                {/*<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>*/}
+                                {/*    <FormControlLabel*/}
+                                {/*        control={*/}
+                                {/*            <Checkbox*/}
+                                {/*                checked={checked}*/}
+                                {/*                onChange={(event) => setChecked(event.target.checked)}*/}
+                                {/*                name="checked"*/}
+                                {/*                color="primary"*/}
+                                {/*                size="small"*/}
+                                {/*            />*/}
+                                {/*        }*/}
+                                {/*        label={<Typography variant="h6">Keep me signed in</Typography>}*/}
+                                {/*    />*/}
                                     <Link variant="h6" component={RouterLink} to="" color="text.primary">
                                         Forgot Password?
                                     </Link>
-                                </Stack>
+                                {/*</Stack>*/}
                             </Grid>
                             {errors.submit && (
                                 <Grid item xs={12}>
@@ -165,14 +169,14 @@ const AuthLogin = () => {
                                 <AnimateButton>
                                     <Button
                                         disableElevation
-                                        disabled={isSubmitting}
+                                        disabled={isLoggingIn || Boolean(!touched.email)}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Login
+                                        {isLoggingIn ? 'Loading...' : 'Login'}
                                     </Button>
                                 </AnimateButton>
                             </Grid>
