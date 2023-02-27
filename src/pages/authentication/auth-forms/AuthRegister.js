@@ -41,11 +41,13 @@ const AuthRegister = () => {
     const navigate = useNavigate();
     const [level, setLevel] = useState();
     const [showPassword, setShowPassword] = useState(false);
+    const [isRegeristering, setIsRegistering] = useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
     const handleMouseDownPassword = (event) => {
+
         console.log("Submitting new user");
         event.preventDefault();
     };
@@ -77,9 +79,10 @@ const AuthRegister = () => {
                 onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     setStatus({success: false});
                     setSubmitting(false);
+                    setIsRegistering(true);
                     console.log("submitting new user...");
                     createUserWithEmailAndPassword(auth, values.email, values.password)
-                        .then((a) => {
+                        .then(() => {
                             updateProfile(auth.currentUser, {
                                 displayName: values.displayname, photoURL: ''
                             }).then(() => {console.log("updated");}).catch((error)=> {console.log("couldn't update");})
@@ -93,6 +96,7 @@ const AuthRegister = () => {
                             setStatus({success: false});
                             setErrors({submit: error.message});
                             setSubmitting(false);
+                            setIsRegistering(false);
                         })
                 }
                 }
@@ -219,14 +223,14 @@ const AuthRegister = () => {
                                 <AnimateButton>
                                     <Button
                                         disableElevation
-                                        disabled={isSubmitting}
+                                        disabled={isRegeristering || Boolean(!touched.email)}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Create Account
+                                        {isRegeristering ? 'Create Account' : 'Creating Account'}
                                     </Button>
                                 </AnimateButton>
                             </Grid>

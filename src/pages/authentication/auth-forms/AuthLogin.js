@@ -63,13 +63,10 @@ const AuthLogin = () => {
                 })}
                 onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     setStatus({success: false});
-                    console.log("Attempting Login...");
                     setIsLoggingIn(true);
                     signInWithEmailAndPassword(auth, values.email, values.password)
                         .then(() => {
-
-                            setTimeout(() => {navigate('/dashboard/default')},3000);
-
+                            navigate('/dashboard/default')
                         })
                         .catch((error) => {
                             const errorCode = error.code;
