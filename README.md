@@ -1,6 +1,6 @@
 # TradeFusion Marketplace is built starting from: Mantis Free React Material UI Dashboard Template
 
-## I started off from the following, then implemented the admin dashboard to my needs
+I started off from the following, then implemented the admin dashboard to my needs
 Clone from GitHub
 
 ```
