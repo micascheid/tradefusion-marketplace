@@ -33,6 +33,7 @@ import {EyeOutlined, EyeInvisibleOutlined} from '@ant-design/icons';
 // firebase auth
 import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import {initializeApp} from "firebase/app";
+import {doc, setDoc} from "firebase/firestore";
 import {db, auth} from "../../../FirebaseConfig";
 
 // ============================|| FIREBASE - REGISTER ||============================ //
@@ -79,14 +80,21 @@ const AuthRegister = () => {
                 onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     setStatus({success: false});
                     setSubmitting(false);
-                    setIsRegistering(true);
+
                     console.log("submitting new user...");
                     createUserWithEmailAndPassword(auth, values.email, values.password)
-                        .then(() => {
-                            updateProfile(auth.currentUser, {
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            updateProfile(user, {
                                 displayName: values.displayname, photoURL: ''
-                            }).then(() => {console.log("updated");}).catch((error)=> {console.log("couldn't update");})
-                            navigate('/dashboard/default');
+                            }).then(() => {
+                                setIsRegistering(true);
+                                console.log("updated");
+                                setDoc(doc(db,`users/${user.uid}`), {quant_subscriptions: []})
+                                    .then(() => {
+                                    navigate('/dashboard/default');
+                                })
+                            })
                         })
                         .catch((error) => {
                             const errorCode = error.code;
@@ -98,6 +106,7 @@ const AuthRegister = () => {
                             setSubmitting(false);
                             setIsRegistering(false);
                         })
+
                 }
                 }
             >
@@ -230,7 +239,7 @@ const AuthRegister = () => {
                                         variant="contained"
                                         color="primary"
                                     >
-                                        {isRegeristering ? 'Create Account' : 'Creating Account'}
+                                        {isRegeristering ? 'Creating Account' : 'Create Account'}
                                     </Button>
                                 </AnimateButton>
                             </Grid>

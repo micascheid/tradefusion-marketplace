@@ -70,19 +70,8 @@ const QuantSelectee = ({title, icon, sx, color = '', quantName, totalBots, loade
                         display: 'flex',
                     }}>
                         <Grid xs={12} item container justifyContent={'space-between'}>
-                            <Grid item xs={4}>
-                                {/*<Box display={"flex"} justifyContent={"flex-start"} >*/}
-                                {/*    /!*<Button disabled={subscribed}>*!/*/}
-                                {/*    /!*    Subscribe*!/*/}
-                                {/*    /!*</Button>*!/*/}
-                                {/*    Subscribe*/}
-                                {/*</Box>*/}
-                            </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12}>
                                 <Typography variant="h3">{quantName}</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Box/>
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
