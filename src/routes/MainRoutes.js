@@ -19,7 +19,6 @@ const SupportPage = Loadable(lazy(() => import('pages/extra-pages/Support')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const usertest = getAuth().currentUser;
-console.log("Main routing: ", usertest);
 
 const MainRoutes = {
   path: '/',

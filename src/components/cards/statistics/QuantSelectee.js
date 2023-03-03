@@ -45,7 +45,7 @@ const QuantSelectee = ({title, icon, sx, color = '', quantName, totalBots, loade
                 quant_subscriptions: arrayUnion(`${quantName}`)
             });
         } catch (error) {
-            console.log("ERROR ADDING SUBSCRIPTION");
+            console.log("ERROR ADDING SUBSCRIPTION", error);
         }
     }
 

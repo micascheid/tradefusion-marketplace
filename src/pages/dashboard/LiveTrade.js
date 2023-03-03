@@ -34,7 +34,6 @@ const LiveTrade = (props) => {
   const lastClosingPrice = live_info["current_ind_val"]["last_closing_price"];
   const currentIndVal = live_info["current_ind_val"];
   const liveTrade = live_info["live_trade"];
-  // console.log(live_info["live_trade"]);
   let botName = props.botInfo.bot;
   const fl = botName.charAt(0).toUpperCase();
   botName = fl+botName.slice(1);

@@ -22,7 +22,6 @@ export default function AvailableQuants(props) {
         const newData = querySnapshot.docs.map((doc) => ({...doc.data(), id: doc.id}));
         setQuants(newData);
         setQuantsLoaded(true);
-        console.log("Got it");
       });
 
       const subs_ref = `users/${uid}`;
@@ -30,10 +29,9 @@ export default function AvailableQuants(props) {
       const queryUserSubs = await getDoc(doc_ref);
       const quantS = queryUserSubs.data()['quant_subscriptions'];
       setQuantSubs(quantS);
-      console.log(quantSubs);
 
     } catch (error){
-      console.log(error);
+      console.log("Error fetching quants", error);
     }
 
   }
@@ -50,7 +48,7 @@ export default function AvailableQuants(props) {
       setQuantSubs(prevState => [...prevState, quantName]);
 
     } catch (error) {
-      console.log("ERROR ADDING SUBSCRIPTION");
+      console.log("Error adding subscription", error);
     }
   }
 
@@ -68,7 +66,7 @@ export default function AvailableQuants(props) {
       );
 
     } catch (error) {
-      console.log("ERROR ADDING SUBSCRIPTION");
+      console.log("Error removing subscription", error);
     }
   }
 

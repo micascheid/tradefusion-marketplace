@@ -15,7 +15,6 @@ import TableCellInTrade from "../TableCellInTrade";
 
 
 const ExitTradeKrownCrossV2 = (props) => {
-  console.log(props.currentIndVals);
   const position = props.currentIndVals["live_trade"]["position"];
   let inequalityEmaFEmaM;
   let inequalityPriceEmaF;

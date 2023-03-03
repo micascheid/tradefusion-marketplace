@@ -168,7 +168,6 @@ export default function QuantsBots(props) {
   }
 
   useEffect(() => {
-    console.log("USE EFFECT IN QUANTS BOTS");
     if (props.quant.id !== currentQuantName) {
       setCurentQuantName(props.quant.id);
       setOpen(-1);

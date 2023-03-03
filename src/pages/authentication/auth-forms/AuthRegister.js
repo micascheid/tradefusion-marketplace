@@ -48,8 +48,6 @@ const AuthRegister = () => {
     };
 
     const handleMouseDownPassword = (event) => {
-
-        console.log("Submitting new user");
         event.preventDefault();
     };
 
@@ -81,7 +79,6 @@ const AuthRegister = () => {
                     setStatus({success: false});
                     setSubmitting(false);
 
-                    console.log("submitting new user...");
                     createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then((userCredential) => {
                             const user = userCredential.user;
@@ -89,7 +86,6 @@ const AuthRegister = () => {
                                 displayName: values.displayname, photoURL: ''
                             }).then(() => {
                                 setIsRegistering(true);
-                                console.log("updated");
                                 setDoc(doc(db,`users/${user.uid}`), {quant_subscriptions: []})
                                     .then(() => {
                                     navigate('/dashboard/default');

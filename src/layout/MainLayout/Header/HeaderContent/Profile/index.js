@@ -90,10 +90,9 @@ const Profile = () => {
     const handleLogout = async () => {
         // logout
         signOut(auth).then(() => {
-            console.log("User signed out");
             navigate('/login');
         }).catch((error) => {
-            console.log("unable to sign user out");
+            console.log("unable to sign user out", error);
         })
 
     };
@@ -104,7 +103,6 @@ const Profile = () => {
         onAuthStateChanged(auth, (user) => {
             if (user){
                 const { test } = user;
-                console.log(test);
                 setProfileName(user.displayName);
             } else {
             }

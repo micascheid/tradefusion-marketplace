@@ -6,7 +6,6 @@ import ExitTradeCSPV2 from "./ExitTradeCSPV2";
 import { Box } from "@mui/material";
 
 const ExitTradeFactory = (props) => {
-  console.log("TradeFactory: ", props.botName);
   switch (props.botName) {
     case "krowncross":
       return <ExitTradeKrownCross currentIndVals={props.currentIndVals}/>

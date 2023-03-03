@@ -14,7 +14,6 @@ import {
 import TableCellInTrade from "../TableCellInTrade";
 
 const ExitTradeCSPV2 = (props) => {
-  console.log(props.allInfo);
   const currentIndVals = props.allInfo["current_ind_val"];
   const positionType = props.allInfo["live_trade"]["position"];
   const lowerPPVI = props.allInfo["current_ind_val"]["ppvi_low"];
