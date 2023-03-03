@@ -96,7 +96,6 @@ const DashboardDefault = () => {
   const [infoForTH, setInfoForTH] = useState([]);
   const [infoForLiveTrade, setInfoForLiveTrade] = useState();
   const [currentQuant, setQuant] = useState(defaultQuant);
-  // const [fetchedQuants, setFetchedQuants] = useState();
   const [botInfo, setBotInfo] = useState({"bot":"", "tf":"", "pair":""});
   const theme = useTheme();
 
@@ -166,7 +165,6 @@ const DashboardDefault = () => {
                 <Typography variant={"h4"} sx={{pb: 3}}>Bot in Real-Time</Typography>
                 <Box sx={{
                   alignItems: 'center',
-                  // backgroundColor: theme.palette.primary.main,
                   display: 'flex',
                   justifyContent: 'center',
                   minHeight: 400
