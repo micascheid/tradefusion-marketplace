@@ -14,7 +14,7 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 const SupportPage = Loadable(lazy(() => import('pages/extra-pages/Support')));
 
 // render - utilities
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
+
 
 // ==============================|| MAIN ROUTING ||============================== //
 
